@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal Room</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Portal Room</h1>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="submit.html">Submit Link</a>
+            <a href="profile.html">Profile</a>
+            <a href="#" id="logout-btn">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-content">
+            <div id="links-container">
+                <h2>Recent Links</h2>
+                <div id="links-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
