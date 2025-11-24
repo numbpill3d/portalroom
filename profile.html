@@ -20,12 +20,20 @@
     <main>
         <div class="profile-content">
             <h2 id="profile-username">User Profile</h2>
+
+            <div class="data-management">
+                <button id="export-data" class="btn-export">Export Data</button>
+                <button id="import-data" class="btn-import">Import Data</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+            </div>
+
             <div id="user-links">
                 <h3>My Links</h3>
                 <div id="user-links-list"></div>
             </div>
             <div id="user-lists">
                 <h3>My Lists</h3>
+                <a href="list.html" class="btn-edit" style="display: inline-block; margin-bottom: 1rem; text-decoration: none;">Create New List</a>
                 <div id="lists-container"></div>
             </div>
         </div>
