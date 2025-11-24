@@ -1,0 +1,25 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Backup files
+*.backup
+*.bak
+
+# Node modules (if you add build tools later)
+node_modules/
+package-lock.json
+
+# Build outputs (if you add build tools later)
+dist/
+build/

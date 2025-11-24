@@ -20,9 +20,11 @@
         <div class="auth-form">
             <h2>Register</h2>
             <form id="register-form">
-                <input type="text" id="reg-username" placeholder="Username" required>
-                <input type="password" id="reg-password" placeholder="Password" required>
+                <input type="text" id="reg-username" placeholder="Username (min 3 characters)" required minlength="3">
+                <input type="password" id="reg-password" placeholder="Password (min 6 characters)" required minlength="6">
+                <input type="password" id="reg-confirm-password" placeholder="Confirm Password" required minlength="6">
                 <button type="submit">Register</button>
+                <p style="margin-top: 1rem; text-align: center;">Already have an account? <a href="login.html">Login here</a></p>
             </form>
         </div>
     </main>
