@@ -8,36 +8,52 @@
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
-        <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
-        </nav>
+        <div class="header-content">
+            <h1>Portal Room</h1>
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="submit.html">Submit Link</a>
+                <a href="list.html">Create List</a>
+                <a href="profile.html" class="active">Profile</a>
+                <button id="logout-btn">Logout</button>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <div class="profile-content">
-            <h2 id="profile-username">User Profile</h2>
+    <div class="container single-col">
+        <main>
+            <div style="background: white; border: 3px solid var(--border-color); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px var(--shadow-color); margin-bottom: 2rem;">
+                <h2 id="profile-username" style="color: var(--sky-dark); margin-bottom: 1rem;">Profile</h2>
 
-            <div class="data-management">
-                <button id="export-data" class="btn-export">Export Data</button>
-                <button id="import-data" class="btn-import">Import Data</button>
-                <input type="file" id="import-file" accept=".json" style="display: none;">
-            </div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <button id="export-data" class="btn btn-success">💾 Export Data</button>
+                    <button id="import-data" class="btn btn-primary">📥 Import Data</button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                </div>
 
-            <div id="user-links">
-                <h3>My Links</h3>
-                <div id="user-links-list"></div>
+                <div class="tabs">
+                    <div class="tab active" data-tab="links-tab">📝 My Links</div>
+                    <div class="tab" data-tab="lists-tab">📋 My Lists</div>
+                    <div class="tab" data-tab="bookmarks-tab">⭐ Bookmarks</div>
+                </div>
+
+                <div id="links-tab" class="tab-content active">
+                    <div id="user-links-list"></div>
+                </div>
+
+                <div id="lists-tab" class="tab-content">
+                    <div style="margin-bottom: 1.5rem;">
+                        <a href="list.html" class="btn btn-primary">➕ Create New List</a>
+                    </div>
+                    <div id="lists-container"></div>
+                </div>
+
+                <div id="bookmarks-tab" class="tab-content">
+                    <div id="bookmarks-list"></div>
+                </div>
             </div>
-            <div id="user-lists">
-                <h3>My Lists</h3>
-                <a href="list.html" class="btn-edit" style="display: inline-block; margin-bottom: 1rem; text-decoration: none;">Create New List</a>
-                <div id="lists-container"></div>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

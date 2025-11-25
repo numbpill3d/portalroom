@@ -3,25 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Room</title>
+    <title>Portal Room - Share & Discover Interesting Links</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
-            <a href="register.html">Register</a>
-        </nav>
+        <div class="header-content">
+            <h1>Portal Room</h1>
+            <nav>
+                <a href="index.html" class="active">Home</a>
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <div id="links-container">
-            <h2>Recent Links</h2>
-            <div id="links-list"></div>
-        </div>
-    </main>
+    <div class="container two-col">
+        <aside class="sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>👋 Welcome!</h3>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-medium); margin-bottom: 1rem;">
+                    Portal Room is a community for sharing and discovering interesting links. Join us today!
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="register.html" class="btn btn-primary" style="text-align: center;">🌟 Join Now</a>
+                    <a href="login.html" class="btn btn-secondary" style="text-align: center;">🔑 Login</a>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>✨ Features</h3>
+                </div>
+                <ul style="list-style: none; font-size: 0.9rem; color: var(--text-medium);">
+                    <li style="margin-bottom: 0.5rem;">📝 Share interesting links</li>
+                    <li style="margin-bottom: 0.5rem;">⬆️ Vote on your favorites</li>
+                    <li style="margin-bottom: 0.5rem;">💬 Comment and discuss</li>
+                    <li style="margin-bottom: 0.5rem;">📋 Create curated lists</li>
+                    <li style="margin-bottom: 0.5rem;">⭐ Bookmark for later</li>
+                    <li>🏆 Earn karma points</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main>
+            <div id="links-container">
+                <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">🌐 Recent Links</h2>
+                <div id="links-list"></div>
+            </div>
+        </main>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

@@ -8,26 +8,59 @@
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
-        <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
-        </nav>
+        <div class="header-content">
+            <h1>Portal Room</h1>
+            <nav>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="submit.html">Submit Link</a>
+                <a href="list.html">Create List</a>
+                <a href="profile.html">Profile</a>
+                <button id="logout-btn">Logout</button>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <div class="dashboard-content">
-            <div class="search-filter">
-                <input type="search" id="search-input" placeholder="Search links...">
+    <div class="container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar-left">
+            <!-- Dynamically populated by JS -->
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="search-container">
+                <input type="search" id="search-input" class="search-input" placeholder="🔍 Search links...">
             </div>
+
             <div id="links-container">
-                <h2>Recent Links</h2>
+                <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">📰 Recent Links</h2>
                 <div id="links-list"></div>
             </div>
-        </div>
-    </main>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>📌 Quick Actions</h3>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="submit.html" class="btn btn-primary" style="text-align: center;">➕ Submit Link</a>
+                    <a href="list.html" class="btn btn-secondary" style="text-align: center;">📋 Create List</a>
+                    <a href="profile.html" class="btn btn-secondary" style="text-align: center;">👤 View Profile</a>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>📖 About</h3>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-medium);">
+                    Portal Room is a community for sharing and discovering interesting links. Vote on your favorites and build curated collections!
+                </p>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

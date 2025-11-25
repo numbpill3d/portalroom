@@ -8,27 +8,69 @@
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
-        <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
-        </nav>
+        <div class="header-content">
+            <h1>Portal Room</h1>
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="submit.html" class="active">Submit Link</a>
+                <a href="list.html">Create List</a>
+                <a href="profile.html">Profile</a>
+                <button id="logout-btn">Logout</button>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <div class="submit-form">
-            <h2>Submit Link</h2>
-            <form id="link-form">
-                <input type="url" id="link-url" placeholder="https://example.com" required>
-                <input type="text" id="link-title" placeholder="Title" required>
-                <textarea id="link-description" placeholder="Description"></textarea>
-                <input type="text" id="link-tags" placeholder="Tags (comma separated)">
-                <button type="submit">Submit Link</button>
-            </form>
-        </div>
-    </main>
+    <div class="container single-col">
+        <main>
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>✨ Submit a New Link</h2>
+                    <p style="color: var(--text-medium); margin-top: 0.5rem;">Share something interesting with the community!</p>
+                </div>
+
+                <form id="link-form">
+                    <div class="form-group">
+                        <label>🔗 URL *</label>
+                        <input type="url" id="link-url" placeholder="https://example.com" required>
+                        <span class="form-helper">The link you want to share</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📝 Title *</label>
+                        <input type="text" id="link-title" placeholder="Give it a catchy title" required>
+                        <span class="form-helper">A descriptive title for your link</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📄 Description</label>
+                        <textarea id="link-description" placeholder="What's this about? Why is it interesting?"></textarea>
+                        <span class="form-helper">Optional: Add context or your thoughts</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🗂️ Category</label>
+                        <select id="link-category">
+                            <option value="tech">💻 Technology</option>
+                            <option value="design">🎨 Design</option>
+                            <option value="news">📰 News</option>
+                            <option value="other">📚 Other</option>
+                        </select>
+                        <span class="form-helper">Choose the most relevant category</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏷️ Tags</label>
+                        <input type="text" id="link-tags" placeholder="javascript, tutorial, web-dev">
+                        <span class="form-helper">Comma-separated tags (e.g., javascript, tutorial)</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                        🚀 Submit Link (+5 Karma)
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
 
     <script src="js/app.js"></script>
 </body>
