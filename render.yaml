@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: portalroom
+    env: static
+    buildCommand: echo "No build required"
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
