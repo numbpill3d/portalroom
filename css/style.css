@@ -1,3 +1,13 @@
+/* ===============================================
+   PORTAL ROOM - DUNGEON CORE EDITION
+   Retro 00s Dungeon Aesthetic with Brown/Stone Grey/Torchlit Theme
+   =============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ===============================================
+   RESET & BASE STYLES
+   =============================================== */
 * {
     margin: 0;
     padding: 0;
@@ -5,125 +15,401 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
+    font-family: 'Crimson Text', serif;
+    background: 
+        radial-gradient(ellipse at center, rgba(139, 69, 19, 0.1) 0%, rgba(44, 24, 16, 0.3) 70%),
+        linear-gradient(45deg, #2C1810 0%, #1A0E0A 50%, #2C1810 100%);
+    background-attachment: fixed;
+    color: #F4E4BC;
     line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* Subtle dungeon texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="stone" patternUnits="userSpaceOnUse" width="100" height="100"><rect width="100" height="100" fill="%232C1810"/><circle cx="20" cy="30" r="1" fill="%234A2C17" opacity="0.3"/><circle cx="60" cy="70" r="1.5" fill="%234A2C17" opacity="0.2"/><circle cx="80" cy="40" r="1" fill="%234A2C17" opacity="0.25"/><circle cx="30" cy="80" r="0.8" fill="%234A2C17" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stone)"/></svg>');
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ===============================================
+   TYPOGRAPHY
+   =============================================== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: #D4AF37;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    margin-bottom: 0.75rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    background: linear-gradient(45deg, #D4AF37, #FFD700, #B8860B);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+h2 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid #8B4513;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+    color: #CD853F;
+}
+
+/* ===============================================
+   HEADER & NAVIGATION
+   =============================================== */
 header {
-    background: white;
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+    background: linear-gradient(145deg, #3D2914 0%, #2C1810 50%, #1A0E0A 100%);
+    padding: 1.5rem;
+    border-bottom: 3px solid #8B4513;
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(212, 175, 55, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    animation: torchFlicker 3s infinite;
+}
+
+@keyframes torchFlicker {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+    75% { opacity: 0.8; }
 }
 
 header h1 {
-    color: #2c3e50;
-    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 nav {
     display: flex;
     gap: 1rem;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
 nav a {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
     text-decoration: none;
-    color: #3498db;
-    transition: color 0.2s;
+    color: #DEB887;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(145deg, #4A2C17, #2C1810);
+    border: 2px solid #8B4513;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+nav a:hover::before {
+    opacity: 1;
 }
 
 nav a:hover {
-    color: #2980b9;
+    color: #FFD700;
+    background: linear-gradient(145deg, #8B4513, #4A2C17);
+    border-color: #D4AF37;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(212, 175, 55, 0.3);
 }
 
+nav a.active {
+    background: linear-gradient(145deg, #8B4513, #4A2C17);
+    color: #FFD700;
+    border-color: #D4AF37;
+    box-shadow: 
+        0 0 15px rgba(212, 175, 55, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ===============================================
+   MAIN CONTENT AREA
+   =============================================== */
 main {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
+    position: relative;
 }
 
-/* Forms */
+.dashboard-content {
+    display: grid;
+    gap: 2rem;
+}
+
+/* ===============================================
+   FORMS - MEDIEVAL DUNGEON STYLE
+   =============================================== */
 .auth-form, .submit-form, .list-form {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: 
+        linear-gradient(145deg, rgba(61, 41, 20, 0.9), rgba(44, 24, 16, 0.95)),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><pattern id="stone" patternUnits="userSpaceOnUse" width="20" height="20"><rect width="20" height="20" fill="%233D2914"/><rect x="0" y="10" width="10" height="5" fill="%232C1810" opacity="0.6"/><rect x="10" y="0" width="5" height="10" fill="%232C1810" opacity="0.4"/></pattern></defs><rect width="200" height="200" fill="url(%23stone)"/></svg>');
+    padding: 2.5rem;
+    border: 3px solid #8B4513;
+    border-radius: 12px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(212, 175, 55, 0.2),
+        0 0 50px rgba(139, 69, 19, 0.3);
+    position: relative;
+    backdrop-filter: blur(2px);
+}
+
+.auth-form::before, .submit-form::before, .list-form::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #D4AF37, #8B4513, #D4AF37);
+    border-radius: 12px;
+    z-index: -1;
+    opacity: 0.6;
+    animation: borderGlow 4s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.8; }
 }
 
 .auth-form h2, .submit-form h2, .list-form h2 {
-    margin-bottom: 1.5rem;
-    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #D4AF37;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.9),
+        0 0 20px rgba(212, 175, 55, 0.5);
 }
 
 .auth-form input, .submit-form input, .submit-form textarea, .list-form input, .list-form textarea {
-    display: block;
     width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    background: rgba(44, 24, 16, 0.8);
+    border: 2px solid #4A2C17;
+    border-radius: 6px;
+    color: #F4E4BC;
     font-size: 1rem;
-    transition: border-color 0.2s;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.auth-form input::placeholder, .submit-form input::placeholder, .submit-form textarea::placeholder, .list-form input::placeholder, .list-form textarea::placeholder {
+    color: rgba(244, 228, 188, 0.6);
+    font-style: italic;
 }
 
 .auth-form input:focus, .submit-form input:focus, .submit-form textarea:focus, .list-form input:focus, .list-form textarea:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: #D4AF37;
+    background: rgba(61, 41, 20, 0.9);
+    box-shadow: 
+        0 0 15px rgba(212, 175, 55, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    transform: translateY(-1px);
 }
 
 .auth-form textarea, .submit-form textarea, .list-form textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
+    font-family: 'Crimson Text', serif;
 }
 
 .auth-form button, .submit-form button, .list-form button {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(145deg, #8B4513, #4A2C17);
+    color: #F4E4BC;
+    border: 2px solid #D4AF37;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.2s;
+    font-size: 1.1rem;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-form button::before, .submit-form button::before, .list-form button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.auth-form button:hover::before, .submit-form button:hover::before, .list-form button:hover::before {
+    left: 100%;
 }
 
 .auth-form button:hover, .submit-form button:hover, .list-form button:hover {
-    background: #2980b9;
+    background: linear-gradient(145deg, #D4AF37, #8B4513);
+    color: #1A0E0A;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(212, 175, 55, 0.6);
+    border-color: #FFD700;
 }
 
-/* Search and Filter */
+.auth-form button:active, .submit-form button:active, .list-form button:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+/* ===============================================
+   SEARCH & FILTER CONTROLS
+   =============================================== */
 .search-filter {
-    background: white;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: 
+        linear-gradient(145deg, rgba(61, 41, 20, 0.9), rgba(44, 24, 16, 0.95));
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid #8B4513;
+    border-radius: 10px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(212, 175, 55, 0.1);
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    position: relative;
+}
+
+.search-filter::before {
+    content: '⚔';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2C1810;
+    color: #D4AF37;
+    padding: 0 1rem;
+    font-size: 1.2rem;
 }
 
 .search-filter input, .search-filter select {
     flex: 1;
-    min-width: 200px;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    background: rgba(44, 24, 16, 0.8);
+    border: 2px solid #4A2C17;
+    border-radius: 6px;
+    color: #F4E4BC;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.3s ease;
 }
 
-/* Links */
+.search-filter input:focus, .search-filter select:focus {
+    outline: none;
+    border-color: #D4AF37;
+    background: rgba(61, 41, 20, 0.9);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* ===============================================
+   LINK ITEMS - TREASURE CARDS
+   =============================================== */
 .link-item {
-    background: white;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: 
+        linear-gradient(145deg, rgba(61, 41, 20, 0.95), rgba(44, 24, 16, 0.98)),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="parchment" patternUnits="userSpaceOnUse" width="50" height="50"><rect width="50" height="50" fill="%233D2914"/><circle cx="10" cy="20" r="1" fill="%234A2C17" opacity="0.4"/><circle cx="40" cy="30" r="1.2" fill="%234A2C17" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23parchment)"/></svg>');
+    margin-bottom: 1.5rem;
+    padding: 2rem;
+    border: 2px solid #8B4513;
+    border-radius: 12px;
+    box-shadow: 
+        0 6px 24px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(212, 175, 55, 0.1),
+        0 0 40px rgba(139, 69, 19, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.link-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.link-item:hover {
+    transform: translateY(-3px);
+    border-color: #D4AF37;
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.9),
+        0 0 50px rgba(212, 175, 55, 0.3);
 }
 
 .link-header {
@@ -131,249 +417,449 @@ main {
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .link-item h3 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     flex: 1;
+    font-size: 1.3rem;
 }
 
-.link-item a {
-    color: #3498db;
+.link-item h3 a {
+    color: #D4AF37;
     text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
-.link-item a:hover {
-    text-decoration: underline;
+.link-item h3 a::after {
+    content: ' ↗';
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.link-item h3 a:hover::after {
+    opacity: 1;
+}
+
+.link-item h3 a:hover {
+    color: #FFD700;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
 .link-item p {
-    margin-bottom: 0.5rem;
-    color: #555;
+    margin-bottom: 1rem;
+    color: #DEB887;
+    line-height: 1.6;
+    font-style: italic;
 }
 
 .link-item small {
-    color: #888;
-    font-size: 0.85rem;
+    color: rgba(244, 228, 188, 0.7);
+    font-size: 0.9rem;
+    font-family: 'Cinzel', serif;
 }
 
-/* Tags */
+/* ===============================================
+   TAGS - GEMSTONES
+   =============================================== */
 .tags {
     display: flex;
     gap: 0.5rem;
-    margin: 0.75rem 0;
+    margin: 1rem 0;
     flex-wrap: wrap;
 }
 
 .tag {
-    background: #e74c3c;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    background: linear-gradient(145deg, #8B4513, #4A2C17);
+    color: #F4E4BC;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #D4AF37;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-family: 'Cinzel', serif;
+    text-transform: lowercase;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Buttons */
+.tag::before {
+    content: '♦';
+    margin-right: 0.3rem;
+    color: #D4AF37;
+}
+
+.tag:hover {
+    background: linear-gradient(145deg, #D4AF37, #8B4513);
+    color: #1A0E0A;
+    transform: scale(1.05);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.6),
+        0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+/* ===============================================
+   BUTTONS - DUNGEON STONE STYLE
+   =============================================== */
 .link-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .btn-edit, .btn-delete, .btn-remove-link, .btn-delete-comment {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid #8B4513;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: all 0.2s;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-edit {
-    background: #3498db;
-    color: white;
+    background: linear-gradient(145deg, #4682B4, #2C4F6B);
+    color: #F4E4BC;
 }
 
-.btn-edit:hover {
-    background: #2980b9;
+.btn-edit::before {
+    content: '✏';
+    margin-right: 0.5rem;
 }
 
 .btn-delete, .btn-remove-link, .btn-delete-comment {
-    background: #e74c3c;
-    color: white;
+    background: linear-gradient(145deg, #8B0000, #4A0000);
+    color: #F4E4BC;
+}
+
+.btn-delete::before {
+    content: '⚔';
+    margin-right: 0.5rem;
+}
+
+.btn-remove-link::before {
+    content: '✖';
+    margin-right: 0.5rem;
+}
+
+.btn-delete-comment::before {
+    content: '✖';
+    margin-right: 0.3rem;
+}
+
+.btn-edit:hover {
+    background: linear-gradient(145deg, #5A9FD4, #4682B4);
+    color: #1A0E0A;
+    border-color: #D4AF37;
+    box-shadow: 0 0 15px rgba(70, 130, 180, 0.5);
+    transform: translateY(-1px);
 }
 
 .btn-delete:hover, .btn-remove-link:hover, .btn-delete-comment:hover {
-    background: #c0392b;
+    background: linear-gradient(145deg, #CD5C5C, #8B0000);
+    color: #F4E4BC;
+    border-color: #D4AF37;
+    box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+    transform: translateY(-1px);
 }
 
-.btn-delete-comment {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    margin-left: 0.5rem;
-}
-
-/* Add to List */
+/* ===============================================
+   ADD TO LIST SECTION
+   =============================================== */
 .add-to-list {
     display: flex;
-    gap: 0.5rem;
-    margin: 1rem 0;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
     align-items: center;
+    padding: 1rem;
+    background: rgba(44, 24, 16, 0.6);
+    border: 1px solid #4A2C17;
+    border-radius: 8px;
+}
+
+.add-to-list::before {
+    content: '📜';
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
 }
 
 .add-to-list select {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
     flex: 1;
     max-width: 300px;
+    padding: 0.75rem;
+    background: rgba(61, 41, 20, 0.8);
+    border: 2px solid #4A2C17;
+    border-radius: 6px;
+    color: #F4E4BC;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.3s ease;
+}
+
+.add-to-list select:focus {
+    outline: none;
+    border-color: #D4AF37;
+    background: rgba(61, 41, 20, 0.9);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .add-to-list button {
-    padding: 0.5rem 1rem;
-    background: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(145deg, #8B4513, #4A2C17);
+    color: #F4E4BC;
+    border: 2px solid #D4AF37;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.add-to-list button::before {
+    content: '⚡';
+    margin-right: 0.5rem;
 }
 
 .add-to-list button:hover {
-    background: #229954;
+    background: linear-gradient(145deg, #D4AF37, #8B4513);
+    color: #1A0E0A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-/* Comments */
+/* ===============================================
+   COMMENTS - MYSTICAL SCRIBBLES
+   =============================================== */
 .comments {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #4A2C17;
+    position: relative;
+}
+
+.comments::before {
+    content: '💬';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2C1810;
+    padding: 0 1rem;
+    font-size: 1.2rem;
 }
 
 .comments h4 {
-    margin-bottom: 0.75rem;
-    color: #555;
-    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #CD853F;
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 .comments-list {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .comment {
-    background: #f9f9f9;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
+    background: rgba(44, 24, 16, 0.7);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #4A2C17;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.comment:hover {
+    background: rgba(61, 41, 20, 0.8);
+    border-color: #8B4513;
 }
 
 .comment-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 0.75rem;
 }
 
 .comment strong {
-    color: #2c3e50;
+    color: #D4AF37;
+    font-family: 'Cinzel', serif;
 }
 
 .comment-form {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    margin-top: 1rem;
 }
 
 .comment-form input {
     flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.75rem;
+    background: rgba(44, 24, 16, 0.8);
+    border: 2px solid #4A2C17;
+    border-radius: 6px;
+    color: #F4E4BC;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.3s ease;
+}
+
+.comment-form input:focus {
+    outline: none;
+    border-color: #D4AF37;
+    background: rgba(61, 41, 20, 0.9);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .comment-form button {
-    padding: 0.5rem 1rem;
-    background: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(145deg, #4682B4, #2C4F6B);
+    color: #F4E4BC;
+    border: 2px solid #87CEEB;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
 }
 
 .comment-form button:hover {
-    background: #2980b9;
+    background: linear-gradient(145deg, #87CEEB, #4682B4);
+    color: #1A0E0A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-/* Lists */
+/* ===============================================
+   LISTS - TREASURE COLLECTIONS
+   =============================================== */
 .list-item {
-    background: white;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: 
+        linear-gradient(145deg, rgba(61, 41, 20, 0.95), rgba(44, 24, 16, 0.98));
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid #8B4513;
+    border-radius: 12px;
+    box-shadow: 
+        0 6px 24px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(212, 175, 55, 0.1);
+    position: relative;
+}
+
+.list-item::before {
+    content: '📜';
+    position: absolute;
+    top: -15px;
+    left: 2rem;
+    background: #2C1810;
+    padding: 0 1rem;
+    font-size: 1.5rem;
 }
 
 .list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .list-item h3 {
     margin-bottom: 0.5rem;
-    color: #2c3e50;
+    color: #D4AF37;
 }
 
 .list-item p {
-    margin-bottom: 1rem;
-    color: #555;
+    margin-bottom: 1.5rem;
+    color: #DEB887;
+    font-style: italic;
+    line-height: 1.6;
 }
 
 .list-links {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
 .list-link-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f9f9f9;
-    padding: 0.5rem;
-    border-radius: 4px;
+    background: rgba(44, 24, 16, 0.8);
+    padding: 0.75rem;
+    border: 1px solid #4A2C17;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.list-link-item:hover {
+    background: rgba(61, 41, 20, 0.9);
+    border-color: #8B4513;
 }
 
 .list-link {
-    background: #e74c3c;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    background: linear-gradient(145deg, #8B4513, #4A2C17);
+    color: #F4E4BC;
+    padding: 0.5rem 1rem;
+    border: 1px solid #D4AF37;
+    border-radius: 6px;
     font-size: 0.9rem;
     text-decoration: none;
-    transition: background 0.2s;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.list-link::before {
+    content: '⚔';
+    margin-right: 0.5rem;
 }
 
 .list-link:hover {
-    background: #c0392b;
+    background: linear-gradient(145deg, #D4AF37, #8B4513);
+    color: #1A0E0A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-/* Notifications */
+/* ===============================================
+   NOTIFICATIONS - MYSTICAL ALERTS
+   =============================================== */
 .notification {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    top: 2rem;
+    right: 2rem;
+    padding: 1.25rem 2rem;
+    border-radius: 8px;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(0, 0, 0, 0.6);
     z-index: 1000;
-    animation: slideIn 0.3s ease-out;
+    animation: slideInRight 0.4s ease-out, torchGlow 2s ease-in-out infinite;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid;
+    max-width: 400px;
 }
 
-@keyframes slideIn {
+@keyframes slideInRight {
     from {
-        transform: translateX(400px);
+        transform: translateX(500px);
         opacity: 0;
     }
     to {
@@ -382,138 +868,246 @@ main {
     }
 }
 
+@keyframes torchGlow {
+    0%, 100% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.6); }
+    50% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.1); }
+}
+
 .notification-success {
-    background: #27ae60;
-    color: white;
+    background: linear-gradient(145deg, rgba(34, 139, 34, 0.9), rgba(0, 100, 0, 0.95));
+    color: #F0FF90;
+    border-color: #32CD32;
+}
+
+.notification-success::before {
+    content: '✓ ';
+    color: #90EE90;
 }
 
 .notification-error {
-    background: #e74c3c;
-    color: white;
+    background: linear-gradient(145deg, rgba(139, 0, 0, 0.9), rgba(100, 0, 0, 0.95));
+    color: #FFB6C1;
+    border-color: #FF6347;
+}
+
+.notification-error::before {
+    content: '⚔ ';
+    color: #FF7F7F;
 }
 
 .notification-info {
-    background: #3498db;
-    color: white;
+    background: linear-gradient(145deg, rgba(70, 130, 180, 0.9), rgba(25, 25, 112, 0.95));
+    color: #E0E0FF;
+    border-color: #87CEEB;
 }
 
-/* Empty State */
+.notification-info::before {
+    content: 'ℹ ';
+    color: #B0E0E6;
+}
+
+/* ===============================================
+   EMPTY STATES - MYSTERIOUS VOID
+   =============================================== */
 .empty-state {
     text-align: center;
-    color: #888;
-    padding: 2rem;
+    color: rgba(244, 228, 188, 0.7);
+    padding: 3rem;
     font-style: italic;
+    font-size: 1.1rem;
+    background: rgba(44, 24, 16, 0.3);
+    border: 2px dashed #4A2C17;
+    border-radius: 12px;
+    position: relative;
+}
+
+.empty-state::before {
+    content: '🔮';
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.6;
 }
 
 .empty-state a {
-    color: #3498db;
+    color: #D4AF37;
     text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .empty-state a:hover {
-    text-decoration: underline;
+    color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* Profile */
+/* ===============================================
+   PROFILE SECTION - NOBLEMAN'S CHAMBER
+   =============================================== */
 .profile-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: 
+        linear-gradient(145deg, rgba(61, 41, 20, 0.9), rgba(44, 24, 16, 0.95)),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><pattern id="royal" patternUnits="userSpaceOnUse" width="40" height="40"><rect width="40" height="40" fill="%233D2914"/><circle cx="20" cy="20" r="2" fill="%232C1810" opacity="0.4"/><path d="M10 10 L30 30 M30 10 L10 30" stroke="%232C1810" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="200" height="200" fill="url(%23royal)"/></svg>');
+    padding: 2.5rem;
+    border: 3px solid #D4AF37;
+    border-radius: 12px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(212, 175, 55, 0.2),
+        0 0 50px rgba(212, 175, 55, 0.2);
     margin-bottom: 2rem;
+    position: relative;
+}
+
+.profile-content::before {
+    content: '⚜';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2C1810;
+    color: #D4AF37;
+    padding: 0 2rem;
+    font-size: 2rem;
 }
 
 .profile-content h2 {
-    margin-bottom: 1.5rem;
-    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    color: #D4AF37;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.9),
+        0 0 20px rgba(212, 175, 55, 0.5);
 }
 
 .profile-content h3 {
     margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: #555;
+    margin-bottom: 1.25rem;
+    color: #CD853F;
+    font-size: 1.4rem;
+    border-left: 4px solid #D4AF37;
+    padding-left: 1rem;
 }
 
-#user-links-list, #lists-container {
-    margin-top: 1rem;
-}
-
-/* Data Management */
+/* ===============================================
+   DATA MANAGEMENT - ROYAL ARCHIVES
+   =============================================== */
 .data-management {
-    background: white;
+    background: rgba(44, 24, 16, 0.8);
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 2px solid #4A2C17;
+    border-radius: 10px;
     margin-bottom: 2rem;
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    position: relative;
+}
+
+.data-management::before {
+    content: '🏛';
+    position: absolute;
+    top: -15px;
+    left: 2rem;
+    background: #2C1810;
+    padding: 0 1rem;
+    font-size: 1.5rem;
 }
 
 .data-management button {
     padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
+    border: 2px solid #8B4513;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.2s;
+    font-size: 0.95rem;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .data-management .btn-export {
-    background: #27ae60;
-    color: white;
+    background: linear-gradient(145deg, #228B22, #006400);
+    color: #F4E4BC;
 }
 
-.data-management .btn-export:hover {
-    background: #229954;
+.data-management .btn-export::before {
+    content: '📤 ';
 }
 
 .data-management .btn-import {
-    background: #9b59b6;
-    color: white;
+    background: linear-gradient(145deg, #4682B4, #2C4F6B);
+    color: #F4E4BC;
+}
+
+.data-management .btn-import::before {
+    content: '📥 ';
+}
+
+.data-management .btn-export:hover {
+    background: linear-gradient(145deg, #32CD32, #228B22);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
 .data-management .btn-import:hover {
-    background: #8e44ad;
+    background: linear-gradient(145deg, #87CEEB, #4682B4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
 #import-file {
     display: none;
 }
 
-/* Responsive Design */
+/* ===============================================
+   RESPONSIVE DESIGN - ADAPTABLE STRONGHOLD
+   =============================================== */
 @media (max-width: 768px) {
     header {
         padding: 1rem;
     }
 
     header h1 {
-        font-size: 1.25rem;
+        font-size: 2rem;
         width: 100%;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     nav {
         width: 100%;
         gap: 0.75rem;
+        justify-content: center;
+    }
+
+    nav a {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
     }
 
     main {
         margin: 1rem auto;
-        padding: 0 0.75rem;
+        padding: 0 1rem;
     }
 
     .auth-form, .submit-form, .list-form, .profile-content {
         padding: 1.5rem;
+        margin: 1rem 0;
     }
 
     .link-header {
         flex-direction: column;
+        align-items: stretch;
     }
 
     .link-actions {
         width: 100%;
         justify-content: flex-start;
+        margin-top: 1rem;
     }
 
     .search-filter {
@@ -522,6 +1116,7 @@ main {
 
     .search-filter input, .search-filter select {
         width: 100%;
+        min-width: unset;
     }
 
     .comment-form {
@@ -551,20 +1146,88 @@ main {
     }
 
     .notification {
-        left: 10px;
-        right: 10px;
-        top: 10px;
+        left: 1rem;
+        right: 1rem;
+        top: 1rem;
+        max-width: none;
+    }
+
+    .tags {
+        justify-content: center;
+    }
+
+    .list-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
     }
 }
 
-/* Loading States */
+/* ===============================================
+   LOADING STATES - ANCIENT SPINNING RUNES
+   =============================================== */
 .loading {
     opacity: 0.6;
     pointer-events: none;
+    position: relative;
 }
 
-/* Utility Classes */
+.loading::after {
+    content: '⚡';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    animation: runeSpin 1s linear infinite;
+    z-index: 10;
+}
+
+@keyframes runeSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ===============================================
+   UTILITY CLASSES - NOBLE ENHANCEMENTS
+   =============================================== */
 .mt-1 { margin-top: 1rem; }
 .mb-1 { margin-bottom: 1rem; }
 .mt-2 { margin-top: 2rem; }
 .mb-2 { margin-bottom: 2rem; }
+.text-center { text-align: center; }
+.text-glow { 
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+}
+.border-glow {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+/* ===============================================
+   ACCESSIBILITY IMPROVEMENTS
+   =============================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus styles for keyboard navigation */
+button:focus, input:focus, textarea:focus, select:focus, a:focus {
+    outline: 2px solid #D4AF37;
+    outline-offset: 2px;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .link-item, .auth-form, .submit-form, .list-form, .profile-content {
+        border-width: 3px;
+    }
+    
+    .tag, .btn-edit, .btn-delete {
+        border-width: 2px;
+    }
+}

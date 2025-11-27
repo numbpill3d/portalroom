@@ -9,7 +9,93 @@ class PortalRoom {
         this.loadCurrentUser();
         this.checkAuth();
         this.setupEventListeners();
+        this.setupDungeonAmbiance();
         this.renderPage();
+        this.setupKeyboardShortcuts();
+    }
+
+    // Setup dungeon ambiance effects
+    setupDungeonAmbiance() {
+        // Add random torch flickers
+        this.createTorchEffects();
+        
+        // Add occasional ambient notifications
+        if (Math.random() < 0.1) { // 10% chance
+            setTimeout(() => {
+                this.showNotification('👻 The ancient spirits whisper of great treasures...', 'info');
+            }, Math.random() * 3000);
+        }
+    }
+
+    // Create torch flame effects
+    createTorchEffects() {
+        const header = document.querySelector('header');
+        if (!header) return;
+
+        // Add floating torch particles
+        for (let i = 0; i < 5; i++) {
+            const torch = document.createElement('div');
+            torch.className = 'torch-effect';
+            torch.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: radial-gradient(circle, #FF6B35, #D4AF37);
+                border-radius: 50%;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                animation: torchFlicker ${2 + Math.random() * 2}s infinite alternate;
+                opacity: 0.6;
+                pointer-events: none;
+                z-index: 1;
+            `;
+            header.appendChild(torch);
+        }
+    }
+
+    // Setup keyboard shortcuts for power users
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Only work if no input is focused
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            switch(e.key) {
+                case 'h':
+                case 'H':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        window.location.href = 'index.html';
+                        this.showNotification('🏰 Returning to the Grand Hall...', 'info');
+                    }
+                    break;
+                case 'd':
+                case 'D':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        window.location.href = 'dashboard.html';
+                        this.showNotification('🏰 Entering the Guild Chamber...', 'info');
+                    }
+                    break;
+                case 's':
+                case 'S':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        window.location.href = 'submit.html';
+                        this.showNotification('📮 Preparing to contribute treasure...', 'info');
+                    }
+                    break;
+                case 'p':
+                case 'P':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        window.location.href = 'profile.html';
+                        this.showNotification('⚜️ Entering your noble chamber...', 'info');
+                    }
+                    break;
+            }
+        });
     }
 
     // Simple hash function for password security
@@ -37,10 +123,37 @@ class PortalRoom {
 
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        notification.textContent = message;
+        
+        // Dungeon-themed message variations
+        const dungeonMessages = {
+            'success': [
+                '✨ Treasure successfully claimed!',
+                '⚔️ Quest completed with honor!',
+                '🏆 Glory has been bestowed upon you!',
+                '🔮 Magic flows through your veins!'
+            ],
+            'error': [
+                '💀 The portal has rejected your offering!',
+                '⚠️ Dark forces block your path!',
+                '🔥 The ancient curse strikes again!',
+                '🌪️ Chaos interrupts your ritual!'
+            ],
+            'info': [
+                '📜 The ancient scrolls whisper...',
+                '🔍 Seekers gather wisdom...',
+                '🏰 The guild takes notice...',
+                '⚡ Mystical energies swirl...'
+            ]
+        };
+
+        // Add some randomness to messages
+        const messages = dungeonMessages[type] || [message];
+        const selectedMessage = messages[Math.floor(Math.random() * messages.length)];
+        notification.textContent = selectedMessage;
+        
         document.body.appendChild(notification);
 
-        setTimeout(() => notification.remove(), 3000);
+        setTimeout(() => notification.remove(), 4000);
     }
 
     // Check authentication for protected pages
@@ -556,7 +669,12 @@ class PortalRoom {
         container.innerHTML = '';
 
         if (recentLinks.length === 0) {
-            container.innerHTML = '<p class="empty-state">No links yet. Be the first to share!</p>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>🔮 The ancient scrolls remain silent... No treasures have been discovered yet.</p>
+                    <p>Be the first brave adventurer to <a href="register.html">join the guild</a> and contribute a legendary discovery!</p>
+                </div>
+            `;
             return;
         }
 

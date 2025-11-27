@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Portal Room</title>
+    <title>📜 Guild Registration - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
+        <h1>🗝️ Portal Room ⚔️</h1>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
-            <a href="register.html">Register</a>
+            <a href="index.html">🏰 The Grand Hall</a>
+            <a href="login.html">🔐 Enter the Dungeon</a>
+            <a href="register.html" class="active">📜 Join the Guild</a>
         </nav>
     </header>
 
     <main>
         <div class="auth-form">
-            <h2>Register</h2>
+            <h2>📜 Guild Initiation Ritual</h2>
+            <p class="dungeon-subtitle">Swear fealty to the Portal Room and claim your place among the legendary archivists...</p>
             <form id="register-form">
-                <input type="text" id="reg-username" placeholder="Username (min 3 characters)" required minlength="3">
-                <input type="password" id="reg-password" placeholder="Password (min 6 characters)" required minlength="6">
-                <input type="password" id="reg-confirm-password" placeholder="Confirm Password" required minlength="6">
-                <button type="submit">Register</button>
-                <p style="margin-top: 1rem; text-align: center;">Already have an account? <a href="login.html">Login here</a></p>
+                <input type="text" id="reg-username" placeholder="Your Adventurer Name (min 3 chars)" required minlength="3">
+                <input type="password" id="reg-password" placeholder="Your Secret Spell (min 6 chars)" required minlength="6">
+                <input type="password" id="reg-confirm-password" placeholder="Confirm Your Sacred Word" required minlength="6">
+                <button type="submit">⚔️ Take the Oath</button>
+                <p class="dungeon-link">Already sworn to our guild? <a href="login.html">Enter the Dungeon</a></p>
             </form>
         </div>
     </main>

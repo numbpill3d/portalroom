@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Portal Room</title>
+    <title>🏰 Guild Chamber - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
+        <h1>🗝️ Portal Room ⚔️</h1>
         <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
+            <a href="dashboard.html" class="active">🏰 Guild Chamber</a>
+            <a href="submit.html">📮 Contribute Treasure</a>
+            <a href="profile.html">⚜️ My Lair</a>
+            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
         </nav>
     </header>
 
     <main>
         <div class="dashboard-content">
             <div class="search-filter">
-                <input type="search" id="search-input" placeholder="Search links...">
+                <h3>🔍 Seek Ancient Wisdom</h3>
+                <input type="search" id="search-input" placeholder="Search through the scrolls and tomes...">
             </div>
             <div id="links-container">
-                <h2>Recent Links</h2>
+                <h2>📚 The Adventurer's Chronicles</h2>
+                <p class="dungeon-subtitle">Discover the most recent treasures shared by fellow guild members</p>
                 <div id="links-list"></div>
             </div>
         </div>

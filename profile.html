@@ -3,37 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Portal Room</title>
+    <title>⚜️ Adventurer's Lair - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
+        <h1>🗝️ Portal Room ⚔️</h1>
         <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
+            <a href="dashboard.html">🏰 Guild Chamber</a>
+            <a href="submit.html">📮 Contribute Treasure</a>
+            <a href="profile.html" class="active">⚜️ My Lair</a>
+            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
         </nav>
     </header>
 
     <main>
         <div class="profile-content">
-            <h2 id="profile-username">User Profile</h2>
+            <h2 id="profile-username">⚜️ Your Noble Chamber</h2>
+            <p class="dungeon-subtitle">Welcome to your personal vault of contributions and collections, esteemed adventurer.</p>
 
             <div class="data-management">
-                <button id="export-data" class="btn-export">Export Data</button>
-                <button id="import-data" class="btn-import">Import Data</button>
+                <h3>🏛️ Archive Management</h3>
+                <button id="export-data" class="btn-export">📤 Preserve My Chronicle</button>
+                <button id="import-data" class="btn-import">📥 Restore From Backup</button>
                 <input type="file" id="import-file" accept=".json" style="display: none;">
             </div>
 
             <div id="user-links">
-                <h3>My Links</h3>
+                <h3>🏆 Your Legendary Contributions</h3>
                 <div id="user-links-list"></div>
             </div>
             <div id="user-lists">
-                <h3>My Lists</h3>
-                <a href="list.html" class="btn-edit" style="display: inline-block; margin-bottom: 1rem; text-decoration: none;">Create New List</a>
+                <h3>📜 Your Enchanted Collections</h3>
+                <a href="list.html" class="btn-edit" style="display: inline-block; margin-bottom: 1rem; text-decoration: none;">✨ Forge New Collection</a>
                 <div id="lists-container"></div>
             </div>
         </div>

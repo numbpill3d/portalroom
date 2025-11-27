@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Link - Portal Room</title>
+    <title>📮 Treasury Contribution - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
+        <h1>🗝️ Portal Room ⚔️</h1>
         <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
+            <a href="dashboard.html">🏰 Guild Chamber</a>
+            <a href="submit.html" class="active">📮 Contribute Treasure</a>
+            <a href="profile.html">⚜️ My Lair</a>
+            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
         </nav>
     </header>
 
     <main>
         <div class="submit-form">
-            <h2>Submit Link</h2>
+            <h2>📮 Offer Your Discovery</h2>
+            <p class="dungeon-subtitle">Share a valuable treasure with your fellow adventurers. Add it to the grand archive of knowledge!</p>
             <form id="link-form">
-                <input type="url" id="link-url" placeholder="https://example.com" required>
-                <input type="text" id="link-title" placeholder="Title" required>
-                <textarea id="link-description" placeholder="Description"></textarea>
-                <input type="text" id="link-tags" placeholder="Tags (comma separated)">
-                <button type="submit">Submit Link</button>
+                <input type="url" id="link-url" placeholder="📜 The Path to Your Treasure (https://example.com)" required>
+                <input type="text" id="link-title" placeholder="⚔️ Title of Your Discovery" required>
+                <textarea id="link-description" placeholder="🧙‍♂️ Ancient lore and wisdom about this treasure..."></textarea>
+                <input type="text" id="link-tags" placeholder="💎 Enchanted Tags (seperate with commas)">
+                <button type="submit">🗡️ Add to the Treasury</button>
             </form>
         </div>
     </main>

@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Portal Room</title>
+    <title>🗝️ Dungeon Entrance - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>Portal Room</h1>
+        <h1>🗝️ Portal Room ⚔️</h1>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
-            <a href="register.html">Register</a>
+            <a href="index.html">🏰 The Grand Hall</a>
+            <a href="login.html" class="active">🔐 Enter the Dungeon</a>
+            <a href="register.html">📜 Join the Guild</a>
         </nav>
     </header>
 
     <main>
         <div class="auth-form">
-            <h2>Login</h2>
+            <h2>🔐 Portal Guardian's Challenge</h2>
+            <p class="dungeon-subtitle">Present your credentials to gain access to the enchanted archive...</p>
             <form id="login-form">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <p style="margin-top: 1rem; text-align: center;">Don't have an account? <a href="register.html">Register here</a></p>
+                <input type="text" id="username" placeholder="Your Guild Name" required>
+                <input type="password" id="password" placeholder="Your Secret Spell" required>
+                <button type="submit">🗡️ Unlock the Portal</button>
+                <p class="dungeon-link">Don't have guild credentials? <a href="register.html">Register with the Guild</a></p>
             </form>
         </div>
     </main>
