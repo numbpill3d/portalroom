@@ -2,6 +2,10 @@
 class PortalRoom {
     constructor() {
         this.currentUser = null;
+        this.filters = {
+            search: '',
+            tag: 'all'
+        };
         this.init();
     }
 
@@ -112,7 +116,7 @@ class PortalRoom {
     // Sanitize HTML to prevent XSS
     sanitizeHTML(text) {
         const div = document.createElement('div');
-        div.textContent = text;
+        div.textContent = text ?? '';
         return div.innerHTML;
     }
 
@@ -401,38 +405,52 @@ class PortalRoom {
     }
 
     handleSearch(e) {
-        const query = e.target.value.toLowerCase();
-        this.filterLinks({ search: query });
+        this.filters.search = e.target.value.trim().toLowerCase();
+        this.applyFilters();
     }
 
     handleFilter(e) {
-        const tag = e.target.value;
-        this.filterLinks({ tag: tag });
+        this.filters.tag = e.target.value;
+        this.applyFilters();
+    }
+
+    applyFilters() {
+        this.filterLinks({
+            search: this.filters.search,
+            tag: this.filters.tag
+        });
     }
 
     filterLinks(options = {}) {
         const container = document.getElementById('links-list');
         if (!container) return;
 
+        const searchTerm = (options.search ?? this.filters.search ?? '').toLowerCase();
+        const tagFilter = options.tag ?? this.filters.tag ?? 'all';
         let allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
 
-        if (options.search) {
+        if (searchTerm) {
             allLinks = allLinks.filter(link =>
-                link.title.toLowerCase().includes(options.search) ||
-                link.description.toLowerCase().includes(options.search) ||
-                link.tags.some(tag => tag.toLowerCase().includes(options.search))
+                (link.title || '').toLowerCase().includes(searchTerm) ||
+                (link.description || '').toLowerCase().includes(searchTerm) ||
+                (link.tags || []).some(tag => tag.toLowerCase().includes(searchTerm))
             );
         }
 
-        if (options.tag && options.tag !== 'all') {
-            allLinks = allLinks.filter(link => link.tags.includes(options.tag));
+        if (tagFilter && tagFilter !== 'all') {
+            allLinks = allLinks.filter(link => 
+                (link.tags || []).some(tag => tag.toLowerCase() === tagFilter.toLowerCase())
+            );
         }
 
         const recentLinks = allLinks.slice(-50).reverse();
         container.innerHTML = '';
 
         if (recentLinks.length === 0) {
-            container.innerHTML = '<p class="empty-state">No links found</p>';
+            const emptyMessage = (searchTerm || tagFilter !== 'all') 
+                ? 'No links match your search or filter'
+                : 'No links yet. <a href="submit.html">Submit one!</a>';
+            container.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
             return;
         }
 
@@ -440,6 +458,34 @@ class PortalRoom {
             const linkElement = this.createLinkElement(link);
             container.appendChild(linkElement);
         });
+    }
+
+    populateTagFilter() {
+        const tagFilter = document.getElementById('tag-filter');
+        if (!tagFilter) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const uniqueTags = Array.from(new Set(
+            allLinks.flatMap(link => link.tags || [])
+        )).filter(Boolean).sort((a, b) => a.localeCompare(b));
+
+        const previousValue = tagFilter.value || this.filters.tag || 'all';
+        tagFilter.innerHTML = '';
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = 'all';
+        defaultOption.textContent = 'All tags';
+        tagFilter.appendChild(defaultOption);
+
+        uniqueTags.forEach(tag => {
+            const option = document.createElement('option');
+            option.value = tag;
+            option.textContent = tag;
+            tagFilter.appendChild(option);
+        });
+
+        tagFilter.value = uniqueTags.includes(previousValue) ? previousValue : 'all';
+        this.filters.tag = tagFilter.value;
     }
 
     deleteLink(linkId) {
@@ -685,23 +731,8 @@ class PortalRoom {
     }
 
     renderDashboard() {
-        const container = document.getElementById('links-list');
-        if (!container) return;
-
-        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
-        const recentLinks = allLinks.slice(-50).reverse();
-
-        container.innerHTML = '';
-
-        if (recentLinks.length === 0) {
-            container.innerHTML = '<p class="empty-state">No links yet. <a href="submit.html">Submit one!</a></p>';
-            return;
-        }
-
-        recentLinks.forEach(link => {
-            const linkElement = this.createLinkElement(link);
-            container.appendChild(linkElement);
-        });
+        this.populateTagFilter();
+        this.applyFilters();
     }
 
     renderProfile() {
@@ -780,6 +811,8 @@ class PortalRoom {
         element.className = 'link-item';
 
         const isAuthor = this.currentUser === link.author;
+        const tags = Array.isArray(link.tags) ? link.tags : [];
+        const description = link.description || '';
         const actionButtons = isAuthor ? `
             <div class="link-actions">
                 <button class="btn-edit" onclick="app.editLink(${link.id})">Edit</button>
@@ -794,9 +827,9 @@ class PortalRoom {
                 <h3><a href="${link.url}" target="_blank">${link.title}</a></h3>
                 ${actionButtons}
             </div>
-            <p>${link.description}</p>
-            <small>by ${link.author} | ${new Date(link.timestamp).toLocaleDateString()}</small>
-            <div class="tags">${link.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
+            <p>${description}</p>
+            <small>by ${this.sanitizeHTML(link.author)} | ${new Date(link.timestamp).toLocaleDateString()}</small>
+            <div class="tags">${tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
             ${listSelector}
             <div class="comments">
                 <h4>Comments (${link.comments?.length || 0})</h4>
@@ -856,7 +889,7 @@ class PortalRoom {
 
                 commentElement.innerHTML = `
                     <div class="comment-content">
-                        <strong>${comment.author}:</strong> ${comment.text}
+                        <strong>${this.sanitizeHTML(comment.author)}:</strong> ${comment.text}
                         ${deleteBtn}
                     </div>
                 `;

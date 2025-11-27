@@ -342,6 +342,10 @@ main {
     position: relative;
 }
 
+.search-filter h3 {
+    flex-basis: 100%;
+}
+
 .search-filter::before {
     content: '⚔';
     position: absolute;
