@@ -797,14 +797,44 @@ class PortalRoom {
         const usernameElement = document.getElementById('profile-username');
         const userLinksList = document.getElementById('user-links-list');
         const listsContainer = document.getElementById('lists-container');
+        const metricsContainer = document.getElementById('profile-metrics');
+        const avatar = document.getElementById('profile-avatar');
 
         if (usernameElement) {
             usernameElement.textContent = `${this.currentUser}'s Profile`;
         }
 
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const userData = users[this.currentUser] || { links: [], lists: [] };
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const authoredComments = allLinks.reduce((sum, link) => {
+            const comments = link.comments || [];
+            return sum + comments.filter(c => c.author === this.currentUser).length;
+        }, 0);
+        const linksInLists = userData.lists?.reduce((sum, list) => sum + (list.links?.length || 0), 0) || 0;
+
+        if (avatar) {
+            avatar.textContent = (this.currentUser || 'PR').slice(0, 2).toUpperCase();
+        }
+
+        if (metricsContainer) {
+            const stats = [
+                { label: 'Links Posted', value: userData.links?.length || 0 },
+                { label: 'Collections', value: userData.lists?.length || 0 },
+                { label: 'Comments', value: authoredComments },
+                { label: 'Links In Lists', value: linksInLists }
+            ];
+
+            metricsContainer.innerHTML = stats.map(stat => `
+                <div class="profile-metric">
+                    <div class="value">${stat.value}</div>
+                    <div class="label">${stat.label}</div>
+                </div>
+            `).join('');
+        }
+
         if (userLinksList) {
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            const userLinks = users[this.currentUser]?.links || [];
+            const userLinks = userData.links || [];
 
             userLinksList.innerHTML = '';
 
@@ -819,8 +849,7 @@ class PortalRoom {
         }
 
         if (listsContainer) {
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            const userLists = users[this.currentUser]?.lists || [];
+            const userLists = userData.lists || [];
 
             listsContainer.innerHTML = '';
 

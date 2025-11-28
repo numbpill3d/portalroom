@@ -206,6 +206,21 @@ main {
     color: var(--accent);
 }
 
+.eyebrow {
+    font-family: 'Orbitron', 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.eyebrow.small {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0.6px;
+}
+
 .section-bar .hint {
     color: var(--muted);
     font-size: 0.95rem;
@@ -800,6 +815,93 @@ main {
     margin-bottom: 0.8rem;
 }
 
+.profile-hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1.25rem;
+    align-items: center;
+}
+
+.profile-identity {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #6cf4ff, #ff64d8);
+    display: grid;
+    place-items: center;
+    color: #041026;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+    text-transform: uppercase;
+}
+
+.profile-tagline {
+    margin-top: 0.35rem;
+    color: var(--muted);
+}
+
+.profile-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.profile-metric {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.profile-metric .label {
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.4px;
+}
+
+.profile-metric .value {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--accent);
+}
+
+.profile-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+}
+
+.profile-column {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.btn-ghost.compact,
+.btn-edit.compact {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+}
+
 .data-management {
     background: rgba(255, 255, 255, 0.04);
     padding: 1.2rem;
@@ -888,8 +990,13 @@ main {
     .auth-form,
     .submit-form,
     .list-form,
-    .profile-content {
+    .profile-content,
+    .profile-hero {
         padding: 1.5rem;
+    }
+
+    .profile-hero {
+        grid-template-columns: 1fr;
     }
 
     .link-header,
