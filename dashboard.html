@@ -17,16 +17,20 @@
         </nav>
     </header>
 
-    <main>
+    <main class="page-shell">
+        <div class="section-bar">
+            <span class="eyebrow">Guild Chamber</span>
+            <span class="hint">Browse, filter, and trade links in webcore style</span>
+        </div>
         <div class="dashboard-content">
-            <div class="search-filter">
+            <div class="search-filter panel-block">
                 <h3>🔍 Seek Ancient Wisdom</h3>
                 <input type="search" id="search-input" placeholder="Search through the scrolls and tomes...">
                 <select id="tag-filter">
                     <option value="all">All tags</option>
                 </select>
             </div>
-            <div id="links-container">
+            <div id="links-container" class="panel-block">
                 <h2>📚 The Adventurer's Chronicles</h2>
                 <p class="dungeon-subtitle">Discover the most recent treasures shared by fellow guild members</p>
                 <div id="links-list"></div>
