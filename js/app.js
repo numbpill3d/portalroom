@@ -11,6 +11,7 @@ class PortalRoom {
 
     init() {
         this.loadCurrentUser();
+        this.redirectAuthenticatedFromAuthPages();
         this.checkAuth();
         this.setupEventListeners();
         this.setupDungeonAmbiance();
@@ -120,6 +121,15 @@ class PortalRoom {
         return div.innerHTML;
     }
 
+    validateUrl(url) {
+        try {
+            const parsed = new URL(url);
+            return ['http:', 'https:'].includes(parsed.protocol);
+        } catch {
+            return false;
+        }
+    }
+
     // Show notification messages
     showNotification(message, type = 'info') {
         const existing = document.querySelector('.notification');
@@ -173,6 +183,18 @@ class PortalRoom {
 
     loadCurrentUser() {
         this.currentUser = localStorage.getItem('currentUser');
+    }
+
+    redirectAuthenticatedFromAuthPages() {
+        if (!this.currentUser) return;
+
+        const authPages = ['login.html', 'register.html'];
+        const currentPage = window.location.pathname.split('/').pop();
+
+        if (authPages.includes(currentPage)) {
+            this.showNotification('Already inside the guild. Taking you to the chamber...', 'info');
+            setTimeout(() => window.location.href = 'dashboard.html', 600);
+        }
     }
 
     setupEventListeners() {
@@ -334,12 +356,21 @@ class PortalRoom {
                 return;
             }
 
+            if (!this.validateUrl(url)) {
+                this.showNotification('Please enter a valid URL (http/https)', 'error');
+                return;
+            }
+
+            const normalizedTags = Array.from(new Set(
+                tags.map(tag => tag.toLowerCase())
+            ));
+
             const link = {
                 id: Date.now(),
                 url: this.sanitizeHTML(url),
                 title: this.sanitizeHTML(title),
                 description: this.sanitizeHTML(description),
-                tags: tags.map(tag => this.sanitizeHTML(tag)),
+                tags: normalizedTags.map(tag => this.sanitizeHTML(tag)).slice(0, 8),
                 author: this.currentUser,
                 timestamp: new Date().toISOString(),
                 comments: []
@@ -486,6 +517,28 @@ class PortalRoom {
 
         tagFilter.value = uniqueTags.includes(previousValue) ? previousValue : 'all';
         this.filters.tag = tagFilter.value;
+    }
+
+    renderStats(container, allLinks) {
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const totalLinks = allLinks.length;
+        const totalUsers = Object.keys(users).length;
+        const totalComments = allLinks.reduce((sum, link) => sum + (link.comments?.length || 0), 0);
+        const uniqueTags = new Set(allLinks.flatMap(link => link.tags || [])).size;
+
+        const stats = [
+            { label: 'Treasures Shared', value: totalLinks },
+            { label: 'Guild Members', value: totalUsers },
+            { label: 'Comments Inscribed', value: totalComments },
+            { label: 'Unique Tags', value: uniqueTags }
+        ];
+
+        container.innerHTML = stats.map(stat => `
+            <div class="stat-card">
+                <div class="stat-value">${stat.value}</div>
+                <div class="stat-label">${stat.label}</div>
+            </div>
+        `).join('');
     }
 
     deleteLink(linkId) {
@@ -713,6 +766,11 @@ class PortalRoom {
         const recentLinks = allLinks.slice(-50).reverse();
 
         container.innerHTML = '';
+
+        const statsContainer = document.getElementById('stats-grid');
+        if (statsContainer) {
+            this.renderStats(statsContainer, allLinks);
+        }
 
         if (recentLinks.length === 0) {
             container.innerHTML = `

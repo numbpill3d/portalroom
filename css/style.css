@@ -378,6 +378,79 @@ main {
 }
 
 /* ===============================================
+   CTA + HERO ENHANCEMENTS
+   =============================================== */
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+}
+
+.btn-primary, .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+    border: 2px solid #8B4513;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #8B4513, #D4AF37);
+    color: #1A0E0A;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
+}
+
+.btn-ghost {
+    background: rgba(44, 24, 16, 0.8);
+    color: #DEB887;
+}
+
+.btn-ghost:hover {
+    background: rgba(61, 41, 20, 0.9);
+    color: #FFD700;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: linear-gradient(160deg, rgba(61, 41, 20, 0.9), rgba(44, 24, 16, 0.95));
+    border: 2px solid #8B4513;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #FFD700;
+    display: block;
+}
+
+.stat-label {
+    color: #DEB887;
+    letter-spacing: 0.5px;
+}
+
+/* ===============================================
    LINK ITEMS - TREASURE CARDS
    =============================================== */
 .link-item {
