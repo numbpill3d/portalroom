@@ -27,7 +27,10 @@
             <p class="dungeon-subtitle">Share a valuable treasure with your fellow adventurers. Add it to the grand archive of knowledge!</p>
             <form id="link-form">
                 <input type="url" id="link-url" placeholder="📜 The Path to Your Treasure (https://example.com)" required>
-                <input type="text" id="link-title" placeholder="⚔️ Title of Your Discovery" required>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="link-title" placeholder="⚔️ Title of Your Discovery" required>
+                    <button type="button" id="fetch-meta" style="padding: 0.95rem 1.05rem; border: 1px solid var(--edge); background: var(--bg); color: var(--accent); font-family: 'Courier New', monospace;">🔍 Fetch</button>
+                </div>
                 <textarea id="link-description" placeholder="🧙‍♂️ Ancient lore and wisdom about this treasure..."></textarea>
                 <input type="text" id="link-tags" placeholder="💎 Enchanted Tags (separate with commas)">
                 <button type="submit">🗡️ Add to the Treasury</button>

@@ -4,7 +4,8 @@ class PortalRoom {
         this.currentUser = null;
         this.filters = {
             search: '',
-            tag: 'all'
+            tag: 'all',
+            sort: 'newest'
         };
         this.init();
     }
@@ -240,6 +241,12 @@ class PortalRoom {
             tagFilter.addEventListener('change', (e) => this.handleFilter(e));
         }
 
+        // Sort
+        const sortFilter = document.getElementById('sort-filter');
+        if (sortFilter) {
+            sortFilter.addEventListener('change', (e) => this.handleSort(e));
+        }
+
         // Export/Import buttons
         const exportBtn = document.getElementById('export-data');
         if (exportBtn) {
@@ -254,6 +261,12 @@ class PortalRoom {
         const importFile = document.getElementById('import-file');
         if (importFile) {
             importFile.addEventListener('change', (e) => this.importData(e));
+        }
+
+        // Fetch meta from URL
+        const fetchMetaBtn = document.getElementById('fetch-meta');
+        if (fetchMetaBtn) {
+            fetchMetaBtn.addEventListener('click', () => this.fetchMetaFromUrl());
         }
     }
 
@@ -322,6 +335,7 @@ class PortalRoom {
                 password: this.hashPassword(password),
                 links: [],
                 lists: [],
+                favorites: [],
                 joinedAt: new Date().toISOString()
             };
             localStorage.setItem('users', JSON.stringify(users));
@@ -361,6 +375,12 @@ class PortalRoom {
                 return;
             }
 
+            const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+            if (allLinks.some(link => link.url === url)) {
+                this.showNotification('This URL has already been submitted', 'error');
+                return;
+            }
+
             const normalizedTags = Array.from(new Set(
                 tags.map(tag => tag.toLowerCase())
             ));
@@ -373,14 +393,15 @@ class PortalRoom {
                 tags: normalizedTags.map(tag => this.sanitizeHTML(tag)).slice(0, 8),
                 author: this.currentUser,
                 timestamp: new Date().toISOString(),
-                comments: []
+                comments: [],
+                upvotes: 0,
+                downvotes: 0
             };
 
             const users = JSON.parse(localStorage.getItem('users') || '{}');
             users[this.currentUser].links.push(link);
             localStorage.setItem('users', JSON.stringify(users));
 
-            const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
             allLinks.push(link);
             localStorage.setItem('allLinks', JSON.stringify(allLinks));
 
@@ -445,6 +466,11 @@ class PortalRoom {
         this.applyFilters();
     }
 
+    handleSort(e) {
+        this.filters.sort = e.target.value;
+        this.applyFilters();
+    }
+
     applyFilters() {
         this.filterLinks({
             search: this.filters.search,
@@ -458,6 +484,7 @@ class PortalRoom {
 
         const searchTerm = (options.search ?? this.filters.search ?? '').toLowerCase();
         const tagFilter = options.tag ?? this.filters.tag ?? 'all';
+        const sortBy = options.sort ?? this.filters.sort ?? 'newest';
         let allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
 
         if (searchTerm) {
@@ -469,16 +496,27 @@ class PortalRoom {
         }
 
         if (tagFilter && tagFilter !== 'all') {
-            allLinks = allLinks.filter(link => 
+            allLinks = allLinks.filter(link =>
                 (link.tags || []).some(tag => tag.toLowerCase() === tagFilter.toLowerCase())
             );
         }
 
-        const recentLinks = allLinks.slice(-50).reverse();
+        // Sort
+        if (sortBy === 'oldest') {
+            allLinks.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        } else if (sortBy === 'most-upvoted') {
+            allLinks.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        } else if (sortBy === 'least-upvoted') {
+            allLinks.sort((a, b) => (a.upvotes || 0) - (b.upvotes || 0));
+        } else {
+            allLinks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+
+        const recentLinks = allLinks.slice(0, 50);
         container.innerHTML = '';
 
         if (recentLinks.length === 0) {
-            const emptyMessage = (searchTerm || tagFilter !== 'all') 
+            const emptyMessage = (searchTerm || tagFilter !== 'all')
                 ? 'No links match your search or filter'
                 : 'No links yet. <a href="submit.html">Submit one!</a>';
             container.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
@@ -695,6 +733,74 @@ class PortalRoom {
         }
     }
 
+    voteLink(linkId, type) {
+        if (!this.currentUser) {
+            this.showNotification('Please log in to vote', 'error');
+            return;
+        }
+
+        try {
+            const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+            const link = allLinks.find(l => l.id === linkId);
+
+            if (!link) return;
+
+            if (!link.votes) link.votes = {};
+            if (!link.upvotes) link.upvotes = 0;
+            if (!link.downvotes) link.downvotes = 0;
+
+            const previousVote = link.votes[this.currentUser];
+
+            if (previousVote === type) {
+                // Remove vote
+                delete link.votes[this.currentUser];
+                link[type + 'votes']--;
+            } else {
+                if (previousVote) {
+                    link[previousVote + 'votes']--;
+                }
+                link.votes[this.currentUser] = type;
+                link[type + 'votes']++;
+            }
+
+            localStorage.setItem('allLinks', JSON.stringify(allLinks));
+            this.showNotification(`Vote ${type}voted!`, 'success');
+            this.renderPage();
+        } catch (error) {
+            this.showNotification('Failed to vote', 'error');
+        }
+    }
+
+    isFavorite(linkId) {
+        if (!this.currentUser) return false;
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        return (users[this.currentUser]?.favorites || []).includes(linkId);
+    }
+
+    toggleFavorite(linkId) {
+        if (!this.currentUser) {
+            this.showNotification('Please log in to favorite', 'error');
+            return;
+        }
+
+        try {
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            if (!users[this.currentUser].favorites) users[this.currentUser].favorites = [];
+            const index = users[this.currentUser].favorites.indexOf(linkId);
+            if (index > -1) {
+                users[this.currentUser].favorites.splice(index, 1);
+                this.showNotification('Removed from favorites', 'info');
+            } else {
+                users[this.currentUser].favorites.push(linkId);
+                this.showNotification('Added to favorites!', 'success');
+            }
+            localStorage.setItem('users', JSON.stringify(users));
+            this.renderPage();
+        } catch (error) {
+            this.showNotification('Failed to toggle favorite', 'error');
+        }
+    }
+
     exportData() {
         try {
             const data = {
@@ -741,6 +847,57 @@ class PortalRoom {
         reader.readAsText(file);
     }
 
+    fetchMetaFromUrl() {
+        const urlInput = document.getElementById('link-url');
+        const titleInput = document.getElementById('link-title');
+        const descInput = document.getElementById('link-description');
+        const fetchBtn = document.getElementById('fetch-meta');
+        const url = urlInput.value.trim();
+
+        if (!url) {
+            this.showNotification('Please enter a URL first', 'error');
+            return;
+        }
+
+        if (!this.validateUrl(url)) {
+            this.showNotification('Please enter a valid URL', 'error');
+            return;
+        }
+
+        this.showNotification('Fetching metadata...', 'info');
+        if (fetchBtn) fetchBtn.disabled = true;
+
+        // Note: CORS may prevent fetching from many sites. This is a demo implementation.
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch');
+                return response.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const title = doc.querySelector('title')?.textContent || '';
+                const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') || 
+                                   doc.querySelector('meta[property="og:description"]')?.getAttribute('content') || '';
+
+                if (title && !titleInput.value) {
+                    titleInput.value = title.trim();
+                }
+                if (description && !descInput.value) {
+                    descInput.value = description.trim();
+                }
+
+                this.showNotification('Metadata fetched!', 'success');
+            })
+            .catch(error => {
+                console.error(error);
+                this.showNotification('Could not fetch metadata (CORS or network issue)', 'error');
+            })
+            .finally(() => {
+                if (fetchBtn) fetchBtn.disabled = false;
+            });
+    }
+
     renderPage() {
         const path = window.location.pathname.split('/').pop();
 
@@ -754,6 +911,9 @@ class PortalRoom {
                 break;
             case 'profile.html':
                 this.renderProfile();
+                break;
+            case 'view-list.html':
+                this.renderViewList();
                 break;
         }
     }
@@ -862,6 +1022,77 @@ class PortalRoom {
                 });
             }
         }
+
+        const favoritesContainer = document.getElementById('favorites-container');
+        if (favoritesContainer) {
+            const userFavorites = userData.favorites || [];
+
+            favoritesContainer.innerHTML = '';
+
+            if (userFavorites.length === 0) {
+                favoritesContainer.innerHTML = '<p class="empty-state">No favorites yet. Favorite some links to see them here!</p>';
+            } else {
+                userFavorites.forEach(linkId => {
+                    const link = allLinks.find(l => l.id === linkId);
+                    if (link) {
+                        const linkElement = this.createLinkElement(link);
+                        favoritesContainer.appendChild(linkElement);
+                    }
+                });
+            }
+        }
+    }
+
+    renderViewList() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const listId = parseInt(urlParams.get('id'));
+
+        if (!listId) {
+            document.getElementById('list-view-container').innerHTML = '<p class="empty-state">Invalid list ID</p>';
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        let foundList = null;
+        let listAuthor = null;
+
+        for (const username in users) {
+            const userLists = users[username].lists || [];
+            const list = userLists.find(l => l.id === listId);
+            if (list) {
+                foundList = list;
+                listAuthor = username;
+                break;
+            }
+        }
+
+        if (!foundList) {
+            document.getElementById('list-view-container').innerHTML = '<p class="empty-state">List not found</p>';
+            return;
+        }
+
+        const listDetails = document.getElementById('list-details');
+        const listLinks = document.getElementById('list-links');
+
+        listDetails.innerHTML = `
+            <h2>${foundList.name}</h2>
+            <p>${foundList.description}</p>
+            <small>Created by ${listAuthor} | ${new Date(foundList.timestamp).toLocaleDateString()}</small>
+        `;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const links = (foundList.links || []).map(linkId => allLinks.find(l => l.id === linkId)).filter(Boolean);
+
+        listLinks.innerHTML = '';
+
+        if (links.length === 0) {
+            listLinks.innerHTML = '<p class="empty-state">No links in this list yet</p>';
+        } else {
+            links.forEach(link => {
+                const linkElement = this.createLinkElement(link);
+                listLinks.appendChild(linkElement);
+            });
+        }
     }
 
     createListElement(list) {
@@ -881,7 +1112,7 @@ class PortalRoom {
 
         element.innerHTML = `
             <div class="list-header">
-                <h3>${list.name}</h3>
+                <h3><a href="view-list.html?id=${list.id}" style="color: var(--accent); text-decoration: none;">${list.name}</a></h3>
                 <button class="btn-delete" onclick="app.deleteList(${list.id})">Delete List</button>
             </div>
             <p>${list.description}</p>
@@ -908,6 +1139,8 @@ class PortalRoom {
         ` : '';
 
         const listSelector = this.currentUser ? this.createListSelector(link.id) : '';
+        const upvotes = link.upvotes || 0;
+        const downvotes = link.downvotes || 0;
 
         element.innerHTML = `
             <div class="link-header">
@@ -918,6 +1151,11 @@ class PortalRoom {
             <small>by ${this.sanitizeHTML(link.author)} | ${new Date(link.timestamp).toLocaleDateString()}</small>
             <div class="tags">${tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
             ${listSelector}
+            <div class="voting">
+                <button onclick="app.voteLink(${link.id}, 'up')" class="vote-btn up">👍 ${upvotes}</button>
+                <button onclick="app.voteLink(${link.id}, 'down')" class="vote-btn down">👎 ${downvotes}</button>
+                ${this.currentUser ? `<button onclick="app.toggleFavorite(${link.id})" class="favorite-btn">${this.isFavorite(link.id) ? '⭐' : '☆'} Favorite</button>` : ''}
+            </div>
             <div class="comments">
                 <h4>Comments (${link.comments?.length || 0})</h4>
                 <div class="comments-list" id="comments-${link.id}"></div>

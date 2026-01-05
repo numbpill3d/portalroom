@@ -642,6 +642,35 @@ main {
     margin-bottom: 0.6rem;
 }
 
+.voting {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.vote-btn {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #c6d1e6;
+    background: #f5f7fd;
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
+
+.vote-btn:hover {
+    background: #eef2fb;
+}
+
+.vote-btn.up {
+    color: #0f3d2a;
+}
+
+.vote-btn.down {
+    color: #4a1025;
+}
+
 .comment {
     background: #f5f7fd;
     padding: 0.9rem;
