@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏰 Guild Chamber - Portal Room</title>
+    <title>Dashboard - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
         <h1>🗝️ Portal Room ⚔️</h1>
         <nav>
-            <a href="dashboard.html" class="active">🏰 Guild Chamber</a>
-            <a href="submit.html">📮 Contribute Treasure</a>
-            <a href="profile.html">⚜️ My Lair</a>
-            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="submit.html">Submit Link</a>
+            <a href="profile.html">Profile</a>
+            <a href="#" id="logout-btn">Logout</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
-            <span class="eyebrow">Guild Chamber</span>
-            <span class="hint">Browse, filter, and trade links in webcore style</span>
+            <span class="eyebrow">Dashboard</span>
+            <span class="hint">Browse and filter links</span>
         </div>
         <div class="dashboard-content">
             <div class="search-filter panel-block">
-                <h3>🔍 Seek Ancient Wisdom</h3>
-                <input type="search" id="search-input" placeholder="Search through the scrolls and tomes...">
+                <h3>Search Links</h3>
+                <input type="search" id="search-input" placeholder="Search links...">
                 <select id="tag-filter">
                     <option value="all">All tags</option>
                 </select>
             </div>
             <div id="links-container" class="panel-block">
-                <h2>📚 The Adventurer's Chronicles</h2>
-                <p class="dungeon-subtitle">Discover the most recent treasures shared by fellow guild members</p>
+                <h2>Recent Links</h2>
+                <p class="dungeon-subtitle">Discover the most recent links shared by users</p>
                 <div id="links-list"></div>
             </div>
         </div>

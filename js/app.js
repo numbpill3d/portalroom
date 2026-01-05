@@ -138,31 +138,31 @@ class PortalRoom {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         
-        // Dungeon-themed message variations
-        const dungeonMessages = {
+        // Message variations
+        const messages = {
             'success': [
-                '✨ Treasure successfully claimed!',
-                '⚔️ Quest completed with honor!',
-                '🏆 Glory has been bestowed upon you!',
-                '🔮 Magic flows through your veins!'
+                'Success!',
+                'Link submitted!',
+                'List created!',
+                'Data exported!'
             ],
             'error': [
-                '💀 The portal has rejected your offering!',
-                '⚠️ Dark forces block your path!',
-                '🔥 The ancient curse strikes again!',
-                '🌪️ Chaos interrupts your ritual!'
+                'Error!',
+                'Invalid input!',
+                'Failed to submit!',
+                'Please try again!'
             ],
             'info': [
-                '📜 The ancient scrolls whisper...',
-                '🔍 Seekers gather wisdom...',
-                '🏰 The guild takes notice...',
-                '⚡ Mystical energies swirl...'
+                'Info',
+                'Loading...',
+                'Redirecting...',
+                'Processing...'
             ]
         };
 
         // Add some randomness to messages
-        const messages = dungeonMessages[type] || [message];
-        const selectedMessage = messages[Math.floor(Math.random() * messages.length)];
+        const msgArray = messages[type] || [message];
+        const selectedMessage = msgArray[Math.floor(Math.random() * msgArray.length)];
         notification.textContent = selectedMessage;
         
         document.body.appendChild(notification);
@@ -527,10 +527,10 @@ class PortalRoom {
         const uniqueTags = new Set(allLinks.flatMap(link => link.tags || [])).size;
 
         const stats = [
-            { label: 'Treasures Shared', value: totalLinks },
-            { label: 'Guild Members', value: totalUsers },
-            { label: 'Comments Inscribed', value: totalComments },
-            { label: 'Unique Tags', value: uniqueTags }
+            { label: 'Links Shared', value: totalLinks },
+            { label: 'Users', value: totalUsers },
+            { label: 'Comments', value: totalComments },
+            { label: 'Tags', value: uniqueTags }
         ];
 
         container.innerHTML = stats.map(stat => `
