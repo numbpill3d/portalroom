@@ -5,8 +5,10 @@ class PortalRoom {
         this.filters = {
             search: '',
             tag: 'all',
-            sort: 'newest'
+            sort: 'newest',
+            feed: 'all'
         };
+        this.shownCount = 20;
         this.init();
     }
 
@@ -18,6 +20,8 @@ class PortalRoom {
         this.setupDungeonAmbiance();
         this.renderPage();
         this.setupKeyboardShortcuts();
+        this.loadTheme();
+        this.addThemeToggle();
     }
 
     // Setup dungeon ambiance effects
@@ -104,15 +108,30 @@ class PortalRoom {
         });
     }
 
-    // Simple hash function for password security
-    hashPassword(password) {
-        let hash = 0;
-        for (let i = 0; i < password.length; i++) {
-            const char = password.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash;
-        }
-        return hash.toString(36);
+    // Secure hash function using SHA-256 with salt
+    async hashPassword(password, salt) {
+        const encoder = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw',
+            encoder.encode(password + Array.from(salt).join('')),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveKey']
+        );
+        const key = await crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: salt,
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            true,
+            ['encrypt']
+        );
+        const exportedKey = await crypto.subtle.exportKey('raw', key);
+        return Array.from(new Uint8Array(exportedKey)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
     // Sanitize HTML to prevent XSS
@@ -120,6 +139,14 @@ class PortalRoom {
         const div = document.createElement('div');
         div.textContent = text ?? '';
         return div.innerHTML;
+    }
+
+    // Simple markdown parser
+    simpleMarkdown(text) {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
     }
 
     validateUrl(url) {
@@ -247,6 +274,12 @@ class PortalRoom {
             sortFilter.addEventListener('change', (e) => this.handleSort(e));
         }
 
+        // Feed filter
+        const feedFilter = document.getElementById('feed-filter');
+        if (feedFilter) {
+            feedFilter.addEventListener('change', (e) => this.handleFeedFilter(e));
+        }
+
         // Export/Import buttons
         const exportBtn = document.getElementById('export-data');
         if (exportBtn) {
@@ -263,6 +296,17 @@ class PortalRoom {
             importFile.addEventListener('change', (e) => this.importData(e));
         }
 
+        // GitHub Gists
+        const exportGistBtn = document.getElementById('export-gist');
+        if (exportGistBtn) {
+            exportGistBtn.addEventListener('click', () => this.exportToGist());
+        }
+
+        const importGistBtn = document.getElementById('import-gist');
+        if (importGistBtn) {
+            importGistBtn.addEventListener('click', () => this.importFromGist());
+        }
+
         // Fetch meta from URL
         const fetchMetaBtn = document.getElementById('fetch-meta');
         if (fetchMetaBtn) {
@@ -270,7 +314,7 @@ class PortalRoom {
         }
     }
 
-    handleLogin(e) {
+    async handleLogin(e) {
         e.preventDefault();
         try {
             const username = document.getElementById('username').value.trim();
@@ -281,15 +325,55 @@ class PortalRoom {
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            const hashedPassword = this.hashPassword(password);
+            // Check rate limiting
+            const failedAttempts = JSON.parse(localStorage.getItem('failedAttempts') || '{}');
+            const userAttempts = failedAttempts[username] || { count: 0, lockUntil: 0 };
+            const now = Date.now();
+            if (userAttempts.lockUntil > now) {
+                const remaining = Math.ceil((userAttempts.lockUntil - now) / 60000);
+                this.showNotification(`Account locked. Try again in ${remaining} minutes.`, 'error');
+                return;
+            }
 
-            if (users[username] && users[username].password === hashedPassword) {
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const user = users[username];
+            if (!user) {
+                this.incrementFailedAttempts(username, failedAttempts);
+                this.showNotification('Invalid credentials', 'error');
+                return;
+            }
+
+            let isValid = false;
+            if (typeof user.password === 'string') {
+                // Old hash, migrate
+                const oldHashed = this.hashPasswordOld(password);
+                if (user.password === oldHashed) {
+                    // Migrate to new hash
+                    const salt = crypto.getRandomValues(new Uint8Array(16));
+                    const newHashed = await this.hashPassword(password, salt);
+                    user.password = newHashed;
+                    user.salt = Array.from(salt);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    isValid = true;
+                }
+            } else {
+                // New hash
+                const hashedPassword = await this.hashPassword(password, new Uint8Array(user.salt));
+                if (user.password === hashedPassword) {
+                    isValid = true;
+                }
+            }
+
+            if (isValid) {
+                // Reset failed attempts on success
+                delete failedAttempts[username];
+                localStorage.setItem('failedAttempts', JSON.stringify(failedAttempts));
                 this.currentUser = username;
                 localStorage.setItem('currentUser', username);
                 this.showNotification('Login successful!', 'success');
                 setTimeout(() => window.location.href = 'dashboard.html', 500);
             } else {
+                this.incrementFailedAttempts(username, failedAttempts);
                 this.showNotification('Invalid credentials', 'error');
             }
         } catch (error) {
@@ -297,7 +381,28 @@ class PortalRoom {
         }
     }
 
-    handleRegister(e) {
+    incrementFailedAttempts(username, failedAttempts) {
+        const userAttempts = failedAttempts[username] || { count: 0, lockUntil: 0 };
+        userAttempts.count++;
+        if (userAttempts.count >= 5) {
+            userAttempts.lockUntil = Date.now() + 15 * 60 * 1000; // 15 minutes
+        }
+        failedAttempts[username] = userAttempts;
+        localStorage.setItem('failedAttempts', JSON.stringify(failedAttempts));
+    }
+
+    // Old hash function for migration
+    hashPasswordOld(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+            const char = password.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash.toString(36);
+    }
+
+    async handleRegister(e) {
         e.preventDefault();
         try {
             const username = document.getElementById('reg-username').value.trim();
@@ -331,11 +436,16 @@ class PortalRoom {
                 return;
             }
 
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const hashedPassword = await this.hashPassword(password, salt);
+
             users[username] = {
-                password: this.hashPassword(password),
+                password: hashedPassword,
+                salt: Array.from(salt),
                 links: [],
                 lists: [],
                 favorites: [],
+                follows: [],
                 joinedAt: new Date().toISOString()
             };
             localStorage.setItem('users', JSON.stringify(users));
@@ -364,6 +474,7 @@ class PortalRoom {
                 .split(',')
                 .map(tag => tag.trim())
                 .filter(tag => tag);
+            const thumbnail = document.getElementById('link-thumbnail').value.trim();
 
             if (!url || !title) {
                 this.showNotification('URL and title are required', 'error');
@@ -391,6 +502,7 @@ class PortalRoom {
                 title: this.sanitizeHTML(title),
                 description: this.sanitizeHTML(description),
                 tags: normalizedTags.map(tag => this.sanitizeHTML(tag)).slice(0, 8),
+                thumbnail: this.sanitizeHTML(thumbnail),
                 author: this.currentUser,
                 timestamp: new Date().toISOString(),
                 comments: [],
@@ -471,6 +583,11 @@ class PortalRoom {
         this.applyFilters();
     }
 
+    handleFeedFilter(e) {
+        this.filters.feed = e.target.value;
+        this.applyFilters();
+    }
+
     applyFilters() {
         this.filterLinks({
             search: this.filters.search,
@@ -501,6 +618,14 @@ class PortalRoom {
             );
         }
 
+        // Feed filter
+        const feedBy = options.feed ?? this.filters.feed ?? 'all';
+        if (feedBy === 'feed' && this.currentUser) {
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const followed = users[this.currentUser]?.follows || [];
+            allLinks = allLinks.filter(link => followed.includes(link.author));
+        }
+
         // Sort
         if (sortBy === 'oldest') {
             allLinks.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -512,7 +637,7 @@ class PortalRoom {
             allLinks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         }
 
-        const recentLinks = allLinks.slice(0, 50);
+        const recentLinks = allLinks.slice(0, this.shownCount);
         container.innerHTML = '';
 
         if (recentLinks.length === 0) {
@@ -527,6 +652,17 @@ class PortalRoom {
             const linkElement = this.createLinkElement(link);
             container.appendChild(linkElement);
         });
+
+        if (allLinks.length > this.shownCount) {
+            const loadMore = document.createElement('button');
+            loadMore.textContent = 'Load More';
+            loadMore.className = 'btn-primary';
+            loadMore.style.cssText = 'margin: 1rem auto; display: block;';
+            loadMore.addEventListener('click', () => {
+                this.loadMoreLinks();
+            });
+            container.appendChild(loadMore);
+        }
     }
 
     populateTagFilter() {
@@ -847,6 +983,62 @@ class PortalRoom {
         reader.readAsText(file);
     }
 
+    exportToGist() {
+        const token = document.getElementById('github-token').value;
+        if (!token) {
+            this.showNotification('Enter GitHub token', 'error');
+            return;
+        }
+        const data = {
+            users: localStorage.getItem('users'),
+            allLinks: localStorage.getItem('allLinks'),
+            currentUser: localStorage.getItem('currentUser')
+        };
+        fetch('https://api.github.com/gists', {
+            method: 'POST',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                description: 'Portal Room Data Backup',
+                public: false,
+                files: {
+                    'portalroom-data.json': { content: JSON.stringify(data) }
+                }
+            })
+        }).then(res => res.json()).then(gist => {
+            localStorage.setItem('gistId', gist.id);
+            this.showNotification('Exported to Gist!', 'success');
+        }).catch(err => {
+            console.error(err);
+            this.showNotification('Export failed (check token/CORS)', 'error');
+        });
+    }
+
+    importFromGist() {
+        const token = document.getElementById('github-token').value;
+        const id = document.getElementById('gist-id').value;
+        if (!token || !id) {
+            this.showNotification('Enter token and Gist ID', 'error');
+            return;
+        }
+        fetch(`https://api.github.com/gists/${id}`, {
+            headers: { 'Authorization': `token ${token}` }
+        }).then(res => res.json()).then(gist => {
+            const content = JSON.parse(gist.files['portalroom-data.json'].content);
+            if (confirm('Overwrite local data?')) {
+                if (content.users) localStorage.setItem('users', content.users);
+                if (content.allLinks) localStorage.setItem('allLinks', content.allLinks);
+                if (content.currentUser) localStorage.setItem('currentUser', content.currentUser);
+                location.reload();
+            }
+        }).catch(err => {
+            console.error(err);
+            this.showNotification('Import failed (check token/ID/CORS)', 'error');
+        });
+    }
+
     fetchMetaFromUrl() {
         const urlInput = document.getElementById('link-url');
         const titleInput = document.getElementById('link-title');
@@ -915,6 +1107,12 @@ class PortalRoom {
             case 'view-list.html':
                 this.renderViewList();
                 break;
+            case 'top-links.html':
+                this.renderTopLinks();
+                break;
+            case 'tags.html':
+                this.renderTags();
+                break;
         }
     }
 
@@ -948,8 +1146,85 @@ class PortalRoom {
         });
     }
 
+    renderTopLinks() {
+        const container = document.getElementById('links-list');
+        if (!container) return;
+
+        let allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        allLinks = allLinks.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        const topLinks = allLinks.slice(0, 50);
+
+        container.innerHTML = '';
+
+        const statsContainer = document.getElementById('stats-grid');
+        if (statsContainer) {
+            this.renderStats(statsContainer, allLinks);
+        }
+
+        if (topLinks.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>🏆 No top links yet. Start voting on links!</p>
+                </div>
+            `;
+            return;
+        }
+
+        topLinks.forEach(link => {
+            const linkElement = this.createLinkElement(link);
+            container.appendChild(linkElement);
+        });
+    }
+
+    renderTags() {
+        const container = document.getElementById('tags-list');
+        if (!container) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const tagCounts = {};
+        allLinks.forEach(link => {
+            (link.tags || []).forEach(tag => {
+                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+            });
+        });
+
+        const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+
+        container.innerHTML = '';
+
+        if (sortedTags.length === 0) {
+            container.innerHTML = '<p class="empty-state">No tags yet. Start adding tags to links!</p>';
+            return;
+        }
+
+        const tagCloud = document.createElement('div');
+        tagCloud.className = 'tag-cloud';
+        tagCloud.innerHTML = sortedTags.map(([tag, count]) => `
+            <a href="dashboard.html?tag=${encodeURIComponent(tag)}" class="tag-link">${tag} (${count})</a>
+        `).join('');
+        container.appendChild(tagCloud);
+    }
+
     renderDashboard() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('tag')) {
+            this.filters.tag = urlParams.get('tag');
+        }
         this.populateTagFilter();
+        // Add feed filter if logged in
+        if (this.currentUser) {
+            const searchFilter = document.querySelector('.search-filter');
+            if (searchFilter) {
+                const existing = document.getElementById('feed-filter');
+                if (!existing) {
+                    const feedSelect = document.createElement('select');
+                    feedSelect.id = 'feed-filter';
+                    feedSelect.innerHTML = '<option value="all">All Links</option><option value="feed">My Feed</option>';
+                    feedSelect.value = this.filters.feed;
+                    searchFilter.appendChild(feedSelect);
+                }
+            }
+        }
         this.applyFilters();
     }
 
@@ -1040,6 +1315,46 @@ class PortalRoom {
                     }
                 });
             }
+        }
+
+        // Add GitHub sync if not present
+        const dataManagement = document.querySelector('.data-management');
+        if (dataManagement) {
+            const existing = dataManagement.querySelector('#github-token');
+            if (!existing) {
+                dataManagement.innerHTML += `
+                    <h4>GitHub Gists Sync</h4>
+                    <input type="password" id="github-token" placeholder="GitHub Personal Access Token">
+                    <button id="export-gist" class="btn-export">📤 Export to Gist</button>
+                    <input type="text" id="gist-id" placeholder="Gist ID to Import">
+                    <button id="import-gist" class="btn-import">📥 Import from Gist</button>
+                `;
+            }
+        }
+
+        const profileColumns = document.querySelector('.profile-columns');
+        if (profileColumns) {
+            const followsContainer = document.createElement('div');
+            followsContainer.className = 'profile-column';
+            profileColumns.appendChild(followsContainer);
+
+            const userFollows = userData.follows || [];
+
+            followsContainer.innerHTML = `
+                <div class="column-header">
+                    <h3>👥 Followed Adventurers</h3>
+                </div>
+                ${userFollows.length === 0 ? '<p class="empty-state">Not following anyone yet.</p>' : userFollows.map(followed => `
+                    <div class="followed-user">
+                        <span>${followed}</span>
+                        <button onclick="app.unfollowUser('${followed}')">Unfollow</button>
+                    </div>
+                `).join('')}
+                <div class="follow-form">
+                    <input type="text" id="follow-username" placeholder="Username to follow">
+                    <button onclick="app.followUser(document.getElementById('follow-username').value)">Follow</button>
+                </div>
+            `;
         }
     }
 
@@ -1147,7 +1462,8 @@ class PortalRoom {
                 <h3><a href="${link.url}" target="_blank">${link.title}</a></h3>
                 ${actionButtons}
             </div>
-            <p>${description}</p>
+            ${link.thumbnail ? `<img src="${link.thumbnail}" alt="Thumbnail" class="link-thumbnail">` : ''}
+            <p>${this.simpleMarkdown(description)}</p>
             <small>by ${this.sanitizeHTML(link.author)} | ${new Date(link.timestamp).toLocaleDateString()}</small>
             <div class="tags">${tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
             ${listSelector}
@@ -1214,7 +1530,7 @@ class PortalRoom {
 
                 commentElement.innerHTML = `
                     <div class="comment-content">
-                        <strong>${this.sanitizeHTML(comment.author)}:</strong> ${comment.text}
+                        <strong>${this.sanitizeHTML(comment.author)}:</strong> ${this.simpleMarkdown(this.sanitizeHTML(comment.text))}
                         ${deleteBtn}
                     </div>
                 `;
@@ -1257,6 +1573,106 @@ class PortalRoom {
         } catch (error) {
             this.showNotification('Failed to add comment', 'error');
         }
+    }
+
+    loadTheme() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        document.body.setAttribute('data-theme', theme);
+    }
+
+    loadMoreLinks() {
+        this.shownCount += 20;
+        this.filterLinks();
+    }
+
+    followUser(username) {
+        if (!username || username === this.currentUser) return;
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (!users[username]) {
+            this.showNotification('User not found', 'error');
+            return;
+        }
+        if (!users[this.currentUser].follows) users[this.currentUser].follows = [];
+        if (!users[this.currentUser].follows.includes(username)) {
+            users[this.currentUser].follows.push(username);
+            localStorage.setItem('users', JSON.stringify(users));
+            this.showNotification(`Following ${username}`, 'success');
+            this.renderPage();
+        }
+    }
+
+    unfollowUser(username) {
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (users[this.currentUser].follows) {
+            users[this.currentUser].follows = users[this.currentUser].follows.filter(u => u !== username);
+            localStorage.setItem('users', JSON.stringify(users));
+            this.showNotification(`Unfollowed ${username}`, 'info');
+            this.renderPage();
+        }
+    }
+
+    toggleTheme() {
+        const current = document.body.getAttribute('data-theme') || 'dark';
+        const newTheme = current === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        this.showNotification(`Switched to ${newTheme} mode`, 'info');
+    }
+
+    addThemeToggle() {
+        const nav = document.querySelector('nav');
+        if (!nav) return;
+
+        const button = document.createElement('a');
+        button.href = '#';
+        button.textContent = '🌙';
+        button.style.cssText = 'font-size: 1.5rem; padding: 0.5rem; cursor: pointer;';
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.toggleTheme();
+        });
+        nav.appendChild(button);
+
+        // Add RSS link
+        const rssLink = document.createElement('a');
+        rssLink.href = '#';
+        rssLink.textContent = 'RSS';
+        rssLink.style.cssText = 'padding: 0.65rem 1.2rem;';
+        rssLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.generateRSS();
+        });
+        nav.appendChild(rssLink);
+    }
+
+    generateRSS() {
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const rssItems = allLinks.map(link => `
+<item>
+<title><![CDATA[${link.title}]]></title>
+<link>${link.url}</link>
+<description><![CDATA[${link.description}]]></description>
+<pubDate>${new Date(link.timestamp).toUTCString()}</pubDate>
+</item>`).join('');
+
+        const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Portal Room Links</title>
+<description>Latest links from Portal Room</description>
+<link>${window.location.origin}</link>
+${rssItems}
+</channel>
+</rss>`;
+
+        const blob = new Blob([rss], { type: 'application/rss+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'portalroom-feed.xml';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.showNotification('RSS feed downloaded!', 'success');
     }
 }
 
