@@ -24,43 +24,9 @@ class PortalRoom {
         this.addThemeToggle();
     }
 
-    // Setup dungeon ambiance effects
+    // Setup page
     setupDungeonAmbiance() {
-        // Add random torch flickers
-        this.createTorchEffects();
-        
-        // Add occasional ambient notifications
-        if (Math.random() < 0.1) { // 10% chance
-            setTimeout(() => {
-                this.showNotification('👻 The ancient spirits whisper of great treasures...', 'info');
-            }, Math.random() * 3000);
-        }
-    }
-
-    // Create torch flame effects
-    createTorchEffects() {
-        const header = document.querySelector('header');
-        if (!header) return;
-
-        // Add floating torch particles
-        for (let i = 0; i < 5; i++) {
-            const torch = document.createElement('div');
-            torch.className = 'torch-effect';
-            torch.style.cssText = `
-                position: absolute;
-                width: 4px;
-                height: 4px;
-                background: radial-gradient(circle, #FF6B35, #D4AF37);
-                border-radius: 50%;
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                animation: torchFlicker ${2 + Math.random() * 2}s infinite alternate;
-                opacity: 0.6;
-                pointer-events: none;
-                z-index: 1;
-            `;
-            header.appendChild(torch);
-        }
+        // Placeholder for future effects
     }
 
     // Setup keyboard shortcuts for power users
@@ -77,7 +43,7 @@ class PortalRoom {
                     if (e.ctrlKey) {
                         e.preventDefault();
                         window.location.href = 'index.html';
-                        this.showNotification('🏰 Returning to the Grand Hall...', 'info');
+                        this.showNotification('returning home...', 'info');
                     }
                     break;
                 case 'd':
@@ -85,7 +51,7 @@ class PortalRoom {
                     if (e.ctrlKey) {
                         e.preventDefault();
                         window.location.href = 'dashboard.html';
-                        this.showNotification('🏰 Entering the Guild Chamber...', 'info');
+                        this.showNotification('loading dashboard...', 'info');
                     }
                     break;
                 case 's':
@@ -93,7 +59,7 @@ class PortalRoom {
                     if (e.ctrlKey) {
                         e.preventDefault();
                         window.location.href = 'submit.html';
-                        this.showNotification('📮 Preparing to contribute treasure...', 'info');
+                        this.showNotification('opening submit form...', 'info');
                     }
                     break;
                 case 'p':
@@ -101,7 +67,7 @@ class PortalRoom {
                     if (e.ctrlKey) {
                         e.preventDefault();
                         window.location.href = 'profile.html';
-                        this.showNotification('⚜️ Entering your noble chamber...', 'info');
+                        this.showNotification('loading profile...', 'info');
                     }
                     break;
             }
@@ -165,33 +131,7 @@ class PortalRoom {
 
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        
-        // Message variations
-        const messages = {
-            'success': [
-                'Success!',
-                'Link submitted!',
-                'List created!',
-                'Data exported!'
-            ],
-            'error': [
-                'Error!',
-                'Invalid input!',
-                'Failed to submit!',
-                'Please try again!'
-            ],
-            'info': [
-                'Info',
-                'Loading...',
-                'Redirecting...',
-                'Processing...'
-            ]
-        };
-
-        // Add some randomness to messages
-        const msgArray = messages[type] || [message];
-        const selectedMessage = msgArray[Math.floor(Math.random() * msgArray.length)];
-        notification.textContent = selectedMessage;
+        notification.textContent = message;
         
         document.body.appendChild(notification);
 
@@ -220,7 +160,7 @@ class PortalRoom {
         const currentPage = window.location.pathname.split('/').pop();
 
         if (authPages.includes(currentPage)) {
-            this.showNotification('Already inside the guild. Taking you to the chamber...', 'info');
+            this.showNotification('already logged in, redirecting...', 'info');
             setTimeout(() => window.location.href = 'dashboard.html', 600);
         }
     }
@@ -1133,8 +1073,8 @@ class PortalRoom {
         if (recentLinks.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <p>🔮 The ancient scrolls remain silent... No treasures have been discovered yet.</p>
-                    <p>Be the first brave adventurer to <a href="register.html">join the guild</a> and contribute a legendary discovery!</p>
+                    <p>No links have been submitted yet.</p>
+                    <p><a href="register.html">Register</a> to submit the first link to the archive.</p>
                 </div>
             `;
             return;
@@ -1164,7 +1104,7 @@ class PortalRoom {
         if (topLinks.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <p>🏆 No top links yet. Start voting on links!</p>
+                    <p>No top links yet. Start voting on links!</p>
                 </div>
             `;
             return;
@@ -1342,7 +1282,7 @@ class PortalRoom {
 
             followsContainer.innerHTML = `
                 <div class="column-header">
-                    <h3>👥 Followed Adventurers</h3>
+                    <h3>Followed Users</h3>
                 </div>
                 ${userFollows.length === 0 ? '<p class="empty-state">Not following anyone yet.</p>' : userFollows.map(followed => `
                     <div class="followed-user">
@@ -1351,7 +1291,7 @@ class PortalRoom {
                     </div>
                 `).join('')}
                 <div class="follow-form">
-                    <input type="text" id="follow-username" placeholder="Username to follow">
+                    <input type="text" id="follow-username" placeholder="username to follow">
                     <button onclick="app.followUser(document.getElementById('follow-username').value)">Follow</button>
                 </div>
             `;

@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏆 Top Links - Portal Room</title>
+    <title>Top Links - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="index.html">🏰 Grand Hall</a>
-            <a href="dashboard.html">🏰 Guild Chamber</a>
-            <a href="top-links.html" class="active">🏆 Top Links</a>
-            <a href="login.html">🔐 Join Guild</a>
+            <a href="index.html">home</a>
+            <a href="dashboard.html">dashboard</a>
+            <a href="top-links.html" class="active">top links</a>
+            <a href="login.html">login</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
             <span class="eyebrow">Top Links</span>
-            <span class="hint">The most upvoted treasures in the portal</span>
+            <span class="hint">most upvoted content</span>
         </div>
-        <div id="stats-grid" class="stats-grid"></div>
-        <div id="links-list"></div>
+        <div class="panel-block">
+            <h2>Highest Rated Links</h2>
+            <p class="dungeon-subtitle">Browse the most popular links in the archive</p>
+            <div id="stats-grid" class="stats-grid"></div>
+            <div id="links-list"></div>
+        </div>
     </main>
 
     <script src="js/app.js"></script>

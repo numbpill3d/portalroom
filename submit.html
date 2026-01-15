@@ -3,38 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📮 Treasury Contribution - Portal Room</title>
+    <title>Submit Link - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="dashboard.html">🏰 Guild Chamber</a>
-            <a href="submit.html" class="active">📮 Contribute Treasure</a>
-            <a href="profile.html">⚜️ My Lair</a>
-            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
+            <a href="dashboard.html">dashboard</a>
+            <a href="submit.html" class="active">submit</a>
+            <a href="profile.html">profile</a>
+            <a href="#" id="logout-btn">logout</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
             <span class="eyebrow">Submit Link</span>
-            <span class="hint">Add a new treasure to the portal board</span>
+            <span class="hint">add a new link to the archive</span>
         </div>
         <div class="submit-form panel-block">
-            <h2>📮 Offer Your Discovery</h2>
-            <p class="dungeon-subtitle">Share a valuable treasure with your fellow adventurers. Add it to the grand archive of knowledge!</p>
+            <h2>New Link Submission</h2>
+            <p class="dungeon-subtitle">Share a link with the community. Fill out the form below to add it to the archive.</p>
             <form id="link-form">
-                <input type="url" id="link-url" placeholder="📜 The Path to Your Treasure (https://example.com)" required>
+                <input type="url" id="link-url" placeholder="url (https://example.com)" required>
                 <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="link-title" placeholder="⚔️ Title of Your Discovery" required>
-                    <button type="button" id="fetch-meta" style="padding: 0.95rem 1.05rem; border: 1px solid var(--edge); background: var(--bg); color: var(--accent); font-family: 'Courier New', monospace;">🔍 Fetch</button>
+                    <input type="text" id="link-title" placeholder="title" required style="flex: 1;">
+                    <button type="button" id="fetch-meta" style="padding: 0.6rem; border: 1px solid var(--edge); background: var(--panel); color: var(--accent); font-family: 'Courier New', monospace; cursor: pointer;">fetch</button>
                 </div>
-                <textarea id="link-description" placeholder="🧙‍♂️ Ancient lore and wisdom about this treasure..."></textarea>
-                <input type="text" id="link-tags" placeholder="💎 Enchanted Tags (separate with commas)">
-                <input type="url" id="link-thumbnail" placeholder="🖼️ Thumbnail URL (optional)">
-                <button type="submit">🗡️ Add to the Treasury</button>
+                <textarea id="link-description" placeholder="description (optional)"></textarea>
+                <input type="text" id="link-tags" placeholder="tags (comma separated)">
+                <input type="url" id="link-thumbnail" placeholder="thumbnail url (optional)">
+                <button type="submit">submit link</button>
             </form>
         </div>
     </main>

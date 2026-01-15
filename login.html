@@ -8,27 +8,33 @@
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="index.html">🏰 The Grand Hall</a>
-            <a href="login.html" class="active">🔐 Enter the Dungeon</a>
-            <a href="register.html">📜 Join the Guild</a>
+            <a href="index.html">home</a>
+            <a href="login.html" class="active">login</a>
+            <a href="register.html">register</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
             <span class="eyebrow">Login</span>
-            <span class="hint">Sign in to Portal Room</span>
+            <span class="hint">sign in to your account</span>
         </div>
         <div class="auth-form panel-block">
-            <h2>Login</h2>
-            <p class="dungeon-subtitle">Enter your username and password to log in.</p>
+            <h2>User Authentication</h2>
+            <p class="dungeon-subtitle">Enter your credentials to access your account.</p>
             <form id="login-form">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <p class="dungeon-link">Don't have an account? <a href="register.html">Register</a></p>
+                <input type="text" id="username" placeholder="username" required>
+                <input type="password" id="password" placeholder="password" required>
+                <button type="submit">login</button>
+                <p class="dungeon-link">Don't have an account? <a href="register.html">Register here</a></p>
             </form>
         </div>
     </main>

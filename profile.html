@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚜️ Adventurer's Lair - Portal Room</title>
+    <title>Profile - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="dashboard.html">🏰 Guild Chamber</a>
-            <a href="submit.html">📮 Contribute Treasure</a>
-            <a href="profile.html" class="active">⚜️ My Lair</a>
-            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
+            <a href="dashboard.html">dashboard</a>
+            <a href="submit.html">submit</a>
+            <a href="profile.html" class="active">profile</a>
+            <a href="#" id="logout-btn">logout</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
-            <span class="eyebrow">My Lair</span>
-            <span class="hint">Your posts, lists, and backups in one place</span>
+            <span class="eyebrow">User Profile</span>
+            <span class="hint">your links, lists, and data</span>
         </div>
 
         <div class="profile-hero panel-block">
             <div class="profile-identity">
                 <div class="profile-avatar" id="profile-avatar">PR</div>
                 <div>
-                    <p class="eyebrow small">Signed in</p>
-                    <h2 id="profile-username">⚜️ Your Noble Chamber</h2>
-                    <p class="profile-tagline">Tweak your board presence, export data, and keep your lists tidy.</p>
+                    <p class="eyebrow small">logged in</p>
+                    <h2 id="profile-username">User Profile</h2>
+                    <p class="profile-tagline">Manage your submissions, collections, and account data.</p>
                 </div>
             </div>
             <div class="profile-metrics" id="profile-metrics"></div>
@@ -37,25 +43,25 @@
 
         <div class="profile-content panel-block">
             <div class="data-management">
-                <h3>🏛️ Archive Management</h3>
-                <button id="export-data" class="btn-export">📤 Preserve My Chronicle</button>
-                <button id="import-data" class="btn-import">📥 Restore From Backup</button>
+                <h3>Data Management</h3>
+                <button id="export-data" class="btn-export">export data</button>
+                <button id="import-data" class="btn-import">import data</button>
                 <input type="file" id="import-file" accept=".json" style="display: none;">
             </div>
 
             <div class="profile-columns">
                 <div id="user-links" class="profile-column">
                     <div class="column-header">
-                        <h3>🏆 Your Legendary Contributions</h3>
-                        <a href="submit.html" class="btn-ghost compact">+ New Link</a>
+                        <h3>Your Links</h3>
+                        <a href="submit.html" class="btn-ghost compact">+ new</a>
                     </div>
                     <div id="user-links-list"></div>
                 </div>
 
                 <div id="user-lists" class="profile-column">
                     <div class="column-header">
-                        <h3>📜 Your Enchanted Collections</h3>
-                        <a href="list.html" class="btn-edit compact" style="text-decoration: none;">✨ Forge New Collection</a>
+                        <h3>Your Lists</h3>
+                        <a href="list.html" class="btn-edit compact" style="text-decoration: none;">+ create</a>
                     </div>
                     <div id="lists-container"></div>
                 </div>

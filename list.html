@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Enchanted Collection - Portal Room</title>
+    <title>Create List - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="dashboard.html">🏰 Guild Chamber</a>
-            <a href="submit.html">📮 Contribute Treasure</a>
-            <a href="profile.html">⚜️ My Lair</a>
-            <a href="list.html" class="active">✨ Forge Collection</a>
-            <a href="#" id="logout-btn">🚪 Leave Dungeon</a>
+            <a href="dashboard.html">dashboard</a>
+            <a href="submit.html">submit</a>
+            <a href="profile.html">profile</a>
+            <a href="list.html" class="active">create list</a>
+            <a href="#" id="logout-btn">logout</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
-            <span class="eyebrow">Collections</span>
-            <span class="hint">Forge a new list inside the retro archive</span>
+            <span class="eyebrow">Create List</span>
+            <span class="hint">organize links into collections</span>
         </div>
         <div class="list-form panel-block">
-            <h2>✨ Enchanted Collection Creation</h2>
-            <p class="dungeon-subtitle">Forge a new enchanted collection to organize and treasure your discoveries, noble adventurer.</p>
+            <h2>New Link Collection</h2>
+            <p class="dungeon-subtitle">Create a new list to organize and curate your favorite links.</p>
             <form id="list-form">
-                <input type="text" id="list-name" placeholder="🏷️ Name Your Legendary Collection" required>
-                <textarea id="list-description" placeholder="📜 Describe the purpose and contents of this mystical collection..."></textarea>
-                <button type="submit">⚔️ Summon Into Being</button>
+                <input type="text" id="list-name" placeholder="list name" required>
+                <textarea id="list-description" placeholder="description (optional)"></textarea>
+                <button type="submit">create list</button>
             </form>
         </div>
     </main>

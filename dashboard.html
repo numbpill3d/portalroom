@@ -8,37 +8,43 @@
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="dashboard.html" class="active">Dashboard</a>
-            <a href="submit.html">Submit Link</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" id="logout-btn">Logout</a>
+            <a href="dashboard.html" class="active">dashboard</a>
+            <a href="submit.html">submit</a>
+            <a href="profile.html">profile</a>
+            <a href="#" id="logout-btn">logout</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
             <span class="eyebrow">Dashboard</span>
-            <span class="hint">Browse and filter links</span>
+            <span class="hint">browse and filter links</span>
         </div>
         <div class="dashboard-content">
             <div class="search-filter panel-block">
-                <h3>Search Links</h3>
-                <input type="search" id="search-input" placeholder="Search links...">
+                <h3>Filter Links</h3>
+                <input type="search" id="search-input" placeholder="search links...">
                 <select id="tag-filter">
-                    <option value="all">All tags</option>
+                    <option value="all">all tags</option>
                 </select>
                 <select id="sort-filter">
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="most-upvoted">Most Upvoted</option>
-                    <option value="least-upvoted">Least Upvoted</option>
+                    <option value="newest">newest first</option>
+                    <option value="oldest">oldest first</option>
+                    <option value="most-upvoted">most upvoted</option>
+                    <option value="least-upvoted">least upvoted</option>
                 </select>
             </div>
             <div id="links-container" class="panel-block">
                 <h2>Recent Links</h2>
-                <p class="dungeon-subtitle">Discover the most recent links shared by users</p>
+                <p class="dungeon-subtitle">Browse the most recent links submitted by users</p>
                 <div id="links-list"></div>
             </div>
         </div>

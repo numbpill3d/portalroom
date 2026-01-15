@@ -3,26 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏷️ Tags - Portal Room</title>
+    <title>Tags - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>🗝️ Portal Room ⚔️</h1>
+        <pre>
+ ____             _        _   ____                       
+|  _ \ ___  _ __ | |_ __ _| | |  _ \ ___   ___  _ __ ___  
+| |_) / _ \| '_ \| __/ _` | | | |_) / _ \ / _ \| '_ ` _ \ 
+|  __/ (_) | | | | || (_| | | |  _ < (_) | (_) | | | | | |
+|_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
+        </pre>
         <nav>
-            <a href="index.html">🏰 Grand Hall</a>
-            <a href="dashboard.html">🏰 Guild Chamber</a>
-            <a href="tags.html" class="active">🏷️ Tags</a>
-            <a href="login.html">🔐 Join Guild</a>
+            <a href="index.html">home</a>
+            <a href="dashboard.html">dashboard</a>
+            <a href="tags.html" class="active">tags</a>
+            <a href="login.html">login</a>
         </nav>
     </header>
 
     <main class="page-shell">
         <div class="section-bar">
-            <span class="eyebrow">Browse by Tags</span>
-            <span class="hint">Explore treasures by their enchanted tags</span>
+            <span class="eyebrow">Browse Tags</span>
+            <span class="hint">explore links by category</span>
         </div>
-        <div id="tags-list"></div>
+        <div class="panel-block">
+            <h2>Tag Directory</h2>
+            <p class="dungeon-subtitle">Browse all tags used in the link archive</p>
+            <div id="tags-list"></div>
+        </div>
     </main>
 
     <script src="js/app.js"></script>
