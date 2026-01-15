@@ -17,29 +17,82 @@
         </pre>
         <nav>
             <a href="index.html" class="active">home</a>
+            <a href="dashboard.html">dashboard</a>
+            <a href="top-links.html">top links</a>
+            <a href="tags.html">tags</a>
             <a href="login.html">login</a>
             <a href="register.html">register</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">Portal Room</span>
-            <span class="hint">link archive · user submitted</span>
-        </div>
-        <div id="links-container" class="dungeon-welcome panel-block">
-            <h2>Shared Links</h2>
-            <div class="dungeon-description">
-                <p>A collaborative link archive. Browse recent submissions or register to contribute your own links to the collection.</p>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
             </div>
-            <div class="cta-buttons">
-                <a href="login.html" class="btn-ghost">login</a>
-                <a href="register.html" class="btn-primary">register</a>
+            
+            <div class="widget">
+                <div class="widget-header">Popular Tags</div>
+                <div class="widget-content">
+                    <div class="tag-widget" id="widget-tags"></div>
+                </div>
             </div>
-            <div id="stats-grid" class="stats-grid"></div>
-            <div id="links-list"></div>
-        </div>
-    </main>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">Portal Room</span>
+                <span class="hint">link archive · user submitted</span>
+            </div>
+            <div id="links-container" class="dungeon-welcome panel-block">
+                <h2>Shared Links</h2>
+                <div class="dungeon-description">
+                    <p>A collaborative link archive. Browse recent submissions or register to contribute your own links to the collection.</p>
+                </div>
+                <div class="cta-buttons">
+                    <a href="login.html" class="btn-ghost">login</a>
+                    <a href="register.html" class="btn-primary">register</a>
+                </div>
+                <div id="stats-grid" class="stats-grid"></div>
+                <div id="links-list"></div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Recent Links</div>
+                <div class="widget-content" id="widget-recent"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Most Upvoted</div>
+                <div class="widget-content" id="widget-top"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Links</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
+                    <div class="widget-item"><a href="submit.html">Submit Link</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                    <div class="widget-item"><a href="tags.html">Browse Tags</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

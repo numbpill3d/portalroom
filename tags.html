@@ -18,22 +18,66 @@
         <nav>
             <a href="index.html">home</a>
             <a href="dashboard.html">dashboard</a>
+            <a href="top-links.html">top links</a>
             <a href="tags.html" class="active">tags</a>
             <a href="login.html">login</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">Browse Tags</span>
-            <span class="hint">explore links by category</span>
-        </div>
-        <div class="panel-block">
-            <h2>Tag Directory</h2>
-            <p class="dungeon-subtitle">Browse all tags used in the link archive</p>
-            <div id="tags-list"></div>
-        </div>
-    </main>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">Browse Tags</span>
+                <span class="hint">explore links by category</span>
+            </div>
+            <div class="panel-block">
+                <h2>Tag Directory</h2>
+                <p class="dungeon-subtitle">Browse all tags used in the link archive. Click a tag to view related links.</p>
+                <div id="tags-list"></div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Recent Links</div>
+                <div class="widget-content" id="widget-recent"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Most Upvoted</div>
+                <div class="widget-content" id="widget-top"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Links</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="index.html">Home</a></div>
+                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                    <div class="widget-item"><a href="login.html">Login</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

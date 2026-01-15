@@ -16,58 +16,109 @@
 |_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
         </pre>
         <nav>
+            <a href="index.html">home</a>
             <a href="dashboard.html">dashboard</a>
             <a href="submit.html">submit</a>
             <a href="profile.html" class="active">profile</a>
             <a href="#" id="logout-btn">logout</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">User Profile</span>
-            <span class="hint">your links, lists, and data</span>
-        </div>
-
-        <div class="profile-hero panel-block">
-            <div class="profile-identity">
-                <div class="profile-avatar" id="profile-avatar">PR</div>
-                <div>
-                    <p class="eyebrow small">logged in</p>
-                    <h2 id="profile-username">User Profile</h2>
-                    <p class="profile-tagline">Manage your submissions, collections, and account data.</p>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Popular Tags</div>
+                <div class="widget-content">
+                    <div class="tag-widget" id="widget-tags"></div>
                 </div>
             </div>
-            <div class="profile-metrics" id="profile-metrics"></div>
-        </div>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+        </aside>
 
-        <div class="profile-content panel-block">
-            <div class="data-management">
-                <h3>Data Management</h3>
-                <button id="export-data" class="btn-export">export data</button>
-                <button id="import-data" class="btn-import">import data</button>
-                <input type="file" id="import-file" accept=".json" style="display: none;">
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">User Profile</span>
+                <span class="hint">your links, lists, and data</span>
             </div>
 
-            <div class="profile-columns">
-                <div id="user-links" class="profile-column">
-                    <div class="column-header">
-                        <h3>Your Links</h3>
-                        <a href="submit.html" class="btn-ghost compact">+ new</a>
+            <div class="profile-hero panel-block">
+                <div class="profile-identity">
+                    <div class="profile-avatar" id="profile-avatar">PR</div>
+                    <div>
+                        <p class="eyebrow small">logged in</p>
+                        <h2 id="profile-username">User Profile</h2>
+                        <p class="profile-tagline">Manage your submissions, collections, and account data.</p>
                     </div>
-                    <div id="user-links-list"></div>
+                </div>
+                <div class="profile-metrics" id="profile-metrics"></div>
+            </div>
+
+            <div class="profile-content panel-block">
+                <div class="data-management">
+                    <h3>Data Management</h3>
+                    <button id="export-data" class="btn-export">export data</button>
+                    <button id="import-data" class="btn-import">import data</button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
                 </div>
 
-                <div id="user-lists" class="profile-column">
-                    <div class="column-header">
-                        <h3>Your Lists</h3>
-                        <a href="list.html" class="btn-edit compact" style="text-decoration: none;">+ create</a>
+                <div class="profile-columns">
+                    <div id="user-links" class="profile-column">
+                        <div class="column-header">
+                            <h3>Your Links</h3>
+                            <a href="submit.html" class="btn-ghost compact">+ new</a>
+                        </div>
+                        <div id="user-links-list"></div>
                     </div>
-                    <div id="lists-container"></div>
+
+                    <div id="user-lists" class="profile-column">
+                        <div class="column-header">
+                            <h3>Your Lists</h3>
+                            <a href="list.html" class="btn-edit compact" style="text-decoration: none;">+ create</a>
+                        </div>
+                        <div id="lists-container"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Recent Activity</div>
+                <div class="widget-content" id="widget-recent"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Most Upvoted</div>
+                <div class="widget-content" id="widget-top"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Actions</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="submit.html">Submit Link</a></div>
+                    <div class="widget-item"><a href="list.html">Create List</a></div>
+                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

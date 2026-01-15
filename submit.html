@@ -16,34 +16,93 @@
 |_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
         </pre>
         <nav>
+            <a href="index.html">home</a>
             <a href="dashboard.html">dashboard</a>
             <a href="submit.html" class="active">submit</a>
             <a href="profile.html">profile</a>
             <a href="#" id="logout-btn">logout</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">Submit Link</span>
-            <span class="hint">add a new link to the archive</span>
-        </div>
-        <div class="submit-form panel-block">
-            <h2>New Link Submission</h2>
-            <p class="dungeon-subtitle">Share a link with the community. Fill out the form below to add it to the archive.</p>
-            <form id="link-form">
-                <input type="url" id="link-url" placeholder="url (https://example.com)" required>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="link-title" placeholder="title" required style="flex: 1;">
-                    <button type="button" id="fetch-meta" style="padding: 0.6rem; border: 1px solid var(--edge); background: var(--panel); color: var(--accent); font-family: 'Courier New', monospace; cursor: pointer;">fetch</button>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">Submission Tips</div>
+                <div class="widget-content">
+                    <p style="color: var(--muted); font-size: 0.85rem; line-height: 1.4;">
+                        • Use descriptive titles<br>
+                        • Add relevant tags<br>
+                        • Include a description<br>
+                        • Check for duplicates<br>
+                        • Use the fetch button
+                    </p>
                 </div>
-                <textarea id="link-description" placeholder="description (optional)"></textarea>
-                <input type="text" id="link-tags" placeholder="tags (comma separated)">
-                <input type="url" id="link-thumbnail" placeholder="thumbnail url (optional)">
-                <button type="submit">submit link</button>
-            </form>
-        </div>
-    </main>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Popular Tags</div>
+                <div class="widget-content">
+                    <div class="tag-widget" id="widget-tags"></div>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">Submit Link</span>
+                <span class="hint">add a new link to the archive</span>
+            </div>
+            <div class="submit-form panel-block">
+                <h2>New Link Submission</h2>
+                <p class="dungeon-subtitle">Share a link with the community. Fill out the form below to add it to the archive.</p>
+                <form id="link-form">
+                    <input type="url" id="link-url" placeholder="url (https://example.com)" required>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="link-title" placeholder="title" required style="flex: 1;">
+                        <button type="button" id="fetch-meta" style="padding: 0.6rem; border: 1px solid var(--edge); background: var(--panel); color: var(--accent); font-family: 'Courier New', monospace; cursor: pointer;">fetch</button>
+                    </div>
+                    <textarea id="link-description" placeholder="description (optional)"></textarea>
+                    <input type="text" id="link-tags" placeholder="tags (comma separated)">
+                    <input type="url" id="link-thumbnail" placeholder="thumbnail url (optional)">
+                    <button type="submit">submit link</button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Your Recent Links</div>
+                <div class="widget-content" id="widget-user-links"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Links</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
+                    <div class="widget-item"><a href="list.html">Create List</a></div>
+                    <div class="widget-item"><a href="profile.html">My Profile</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

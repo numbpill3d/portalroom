@@ -22,6 +22,8 @@ class PortalRoom {
         this.setupKeyboardShortcuts();
         this.loadTheme();
         this.addThemeToggle();
+        this.populateWidgets();
+        this.startTicker();
     }
 
     // Setup page
@@ -1613,6 +1615,180 @@ ${rssItems}
         a.click();
         URL.revokeObjectURL(url);
         this.showNotification('RSS feed downloaded!', 'success');
+    }
+
+    // Populate sidebar widgets
+    populateWidgets() {
+        this.populateStatsWidget();
+        this.populateTagsWidget();
+        this.populateUsersWidget();
+        this.populateRecentWidget();
+        this.populateTopWidget();
+        this.populateUserLinksWidget();
+    }
+
+    populateStatsWidget() {
+        const container = document.getElementById('widget-stats');
+        if (!container) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const totalLinks = allLinks.length;
+        const totalUsers = Object.keys(users).length;
+        const totalComments = allLinks.reduce((sum, link) => sum + (link.comments?.length || 0), 0);
+
+        container.innerHTML = `
+            <div class="widget-stat">
+                <span class="widget-stat-label">Total Links</span>
+                <span class="widget-stat-value">${totalLinks}</span>
+            </div>
+            <div class="widget-stat">
+                <span class="widget-stat-label">Users</span>
+                <span class="widget-stat-value">${totalUsers}</span>
+            </div>
+            <div class="widget-stat">
+                <span class="widget-stat-label">Comments</span>
+                <span class="widget-stat-value">${totalComments}</span>
+            </div>
+        `;
+    }
+
+    populateTagsWidget() {
+        const container = document.getElementById('widget-tags');
+        if (!container) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const tagCounts = {};
+        allLinks.forEach(link => {
+            (link.tags || []).forEach(tag => {
+                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+            });
+        });
+
+        const sortedTags = Object.entries(tagCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+
+        if (sortedTags.length === 0) {
+            container.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No tags yet</p>';
+            return;
+        }
+
+        container.innerHTML = sortedTags.map(([tag, count]) => `
+            <a href="dashboard.html?tag=${encodeURIComponent(tag)}" class="tag-widget-item">${tag} (${count})</a>
+        `).join('');
+    }
+
+    populateUsersWidget() {
+        const container = document.getElementById('widget-users');
+        if (!container) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const userCounts = {};
+        allLinks.forEach(link => {
+            userCounts[link.author] = (userCounts[link.author] || 0) + 1;
+        });
+
+        const topUsers = Object.entries(userCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        if (topUsers.length === 0) {
+            container.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No users yet</p>';
+            return;
+        }
+
+        container.innerHTML = topUsers.map(([user, count]) => `
+            <div class="widget-item">
+                <span style="color: var(--text);">${this.sanitizeHTML(user)}</span>
+                <span style="color: var(--accent); font-weight: bold; font-size: 0.8rem;">${count}</span>
+            </div>
+        `).join('');
+    }
+
+    populateRecentWidget() {
+        const container = document.getElementById('widget-recent');
+        if (!container) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const recentLinks = allLinks.slice(-5).reverse();
+
+        if (recentLinks.length === 0) {
+            container.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No links yet</p>';
+            return;
+        }
+
+        container.innerHTML = recentLinks.map(link => `
+            <div class="widget-item">
+                <a href="${link.url}" target="_blank" title="${this.sanitizeHTML(link.title)}">${this.sanitizeHTML(link.title)}</a>
+            </div>
+        `).join('');
+    }
+
+    populateTopWidget() {
+        const container = document.getElementById('widget-top');
+        if (!container) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const topLinks = allLinks
+            .sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0))
+            .slice(0, 5);
+
+        if (topLinks.length === 0) {
+            container.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No links yet</p>';
+            return;
+        }
+
+        container.innerHTML = topLinks.map(link => `
+            <div class="widget-item">
+                <a href="${link.url}" target="_blank" title="${this.sanitizeHTML(link.title)}">${this.sanitizeHTML(link.title)}</a>
+                <span style="color: var(--accent); font-weight: bold; font-size: 0.8rem; margin-left: 0.3rem;">↑${link.upvotes || 0}</span>
+            </div>
+        `).join('');
+    }
+
+    populateUserLinksWidget() {
+        const container = document.getElementById('widget-user-links');
+        if (!container || !this.currentUser) return;
+
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const userLinks = users[this.currentUser]?.links || [];
+        const recentLinks = userLinks.slice(-5).reverse();
+
+        if (recentLinks.length === 0) {
+            container.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No links submitted yet</p>';
+            return;
+        }
+
+        container.innerHTML = recentLinks.map(link => `
+            <div class="widget-item">
+                <a href="${link.url}" target="_blank" title="${this.sanitizeHTML(link.title)}">${this.sanitizeHTML(link.title)}</a>
+            </div>
+        `).join('');
+    }
+
+    // Start ticker animation
+    startTicker() {
+        const ticker = document.getElementById('ticker');
+        if (!ticker) return;
+
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        const recentLinks = allLinks.slice(-20).reverse();
+
+        if (recentLinks.length === 0) {
+            ticker.innerHTML = '<span class="ticker-item">No recent links</span>';
+            return;
+        }
+
+        // Duplicate items for seamless loop
+        const items = [...recentLinks, ...recentLinks];
+        
+        ticker.innerHTML = items.map(link => `
+            <span class="ticker-item">
+                <a href="${link.url}" target="_blank">${this.sanitizeHTML(link.title)}</a>
+                <span style="color: var(--muted);">by ${this.sanitizeHTML(link.author)}</span>
+            </span>
+        `).join('');
     }
 }
 

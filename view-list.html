@@ -17,21 +17,72 @@
         </pre>
         <nav>
             <a href="index.html">home</a>
+            <a href="dashboard.html">dashboard</a>
             <a href="login.html">login</a>
             <a href="register.html">register</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">View List</span>
-            <span class="hint">curated link collection</span>
-        </div>
-        <div id="list-view-container" class="panel-block">
-            <div id="list-details"></div>
-            <div id="list-links"></div>
-        </div>
-    </main>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Popular Tags</div>
+                <div class="widget-content">
+                    <div class="tag-widget" id="widget-tags"></div>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">View List</span>
+                <span class="hint">curated link collection</span>
+            </div>
+            <div id="list-view-container" class="panel-block">
+                <div id="list-details"></div>
+                <div id="list-links"></div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Recent Links</div>
+                <div class="widget-content" id="widget-recent"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Most Upvoted</div>
+                <div class="widget-content" id="widget-top"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Links</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="index.html">Home</a></div>
+                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                    <div class="widget-item"><a href="tags.html">Browse Tags</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

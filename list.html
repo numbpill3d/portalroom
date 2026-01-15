@@ -16,29 +16,87 @@
 |_|   \___/|_| |_|\__\__,_|_| |_| \_\___/ \___/|_| |_| |_|
         </pre>
         <nav>
+            <a href="index.html">home</a>
             <a href="dashboard.html">dashboard</a>
             <a href="submit.html">submit</a>
             <a href="profile.html">profile</a>
             <a href="list.html" class="active">create list</a>
             <a href="#" id="logout-btn">logout</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">Create List</span>
-            <span class="hint">organize links into collections</span>
-        </div>
-        <div class="list-form panel-block">
-            <h2>New Link Collection</h2>
-            <p class="dungeon-subtitle">Create a new list to organize and curate your favorite links.</p>
-            <form id="list-form">
-                <input type="text" id="list-name" placeholder="list name" required>
-                <textarea id="list-description" placeholder="description (optional)"></textarea>
-                <button type="submit">create list</button>
-            </form>
-        </div>
-    </main>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">List Tips</div>
+                <div class="widget-content">
+                    <p style="color: var(--muted); font-size: 0.85rem; line-height: 1.4;">
+                        • Create themed collections<br>
+                        • Add links from dashboard<br>
+                        • Keep lists organized<br>
+                        • Share with others
+                    </p>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Popular Tags</div>
+                <div class="widget-content">
+                    <div class="tag-widget" id="widget-tags"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">Create List</span>
+                <span class="hint">organize links into collections</span>
+            </div>
+            <div class="list-form panel-block">
+                <h2>New Link Collection</h2>
+                <p class="dungeon-subtitle">Create a new list to organize and curate your favorite links.</p>
+                <form id="list-form">
+                    <input type="text" id="list-name" placeholder="list name" required>
+                    <textarea id="list-description" placeholder="description (optional)"></textarea>
+                    <button type="submit">create list</button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Recent Links</div>
+                <div class="widget-content" id="widget-recent"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Actions</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="submit.html">Submit Link</a></div>
+                    <div class="widget-item"><a href="profile.html">My Profile</a></div>
+                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

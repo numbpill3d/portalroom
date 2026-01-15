@@ -17,27 +17,78 @@
         </pre>
         <nav>
             <a href="index.html">home</a>
+            <a href="dashboard.html">dashboard</a>
             <a href="login.html" class="active">login</a>
             <a href="register.html">register</a>
         </nav>
+        <div class="ticker-container">
+            <div class="ticker-label">latest:</div>
+            <div class="ticker" id="ticker"></div>
+        </div>
     </header>
 
-    <main class="page-shell">
-        <div class="section-bar">
-            <span class="eyebrow">Login</span>
-            <span class="hint">sign in to your account</span>
-        </div>
-        <div class="auth-form panel-block">
-            <h2>User Authentication</h2>
-            <p class="dungeon-subtitle">Enter your credentials to access your account.</p>
-            <form id="login-form">
-                <input type="text" id="username" placeholder="username" required>
-                <input type="password" id="password" placeholder="password" required>
-                <button type="submit">login</button>
-                <p class="dungeon-link">Don't have an account? <a href="register.html">Register here</a></p>
-            </form>
-        </div>
-    </main>
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">Site Stats</div>
+                <div class="widget-content" id="widget-stats"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Popular Tags</div>
+                <div class="widget-content">
+                    <div class="tag-widget" id="widget-tags"></div>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Top Contributors</div>
+                <div class="widget-content" id="widget-users"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="section-bar">
+                <span class="eyebrow">Login</span>
+                <span class="hint">sign in to your account</span>
+            </div>
+            <div class="auth-form panel-block">
+                <h2>User Authentication</h2>
+                <p class="dungeon-subtitle">Enter your credentials to access your account.</p>
+                <form id="login-form">
+                    <input type="text" id="username" placeholder="username" required>
+                    <input type="password" id="password" placeholder="password" required>
+                    <button type="submit">login</button>
+                    <p class="dungeon-link">Don't have an account? <a href="register.html">Register here</a></p>
+                </form>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar" id="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">Recent Links</div>
+                <div class="widget-content" id="widget-recent"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Most Upvoted</div>
+                <div class="widget-content" id="widget-top"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Quick Links</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="index.html">Home</a></div>
+                    <div class="widget-item"><a href="register.html">Register</a></div>
+                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                    <div class="widget-item"><a href="tags.html">Browse Tags</a></div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="js/app.js"></script>
 </body>
