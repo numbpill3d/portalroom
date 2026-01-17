@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Portal Room</title>
     <link rel="stylesheet" href="css/style.css">
+    <style id="user-custom-css"></style>
 </head>
 <body>
     <header>
@@ -32,20 +33,32 @@
         <!-- Left Sidebar -->
         <aside class="sidebar" id="left-sidebar">
             <div class="widget">
-                <div class="widget-header">Site Stats</div>
-                <div class="widget-content" id="widget-stats"></div>
+                <div class="widget-header">Profile Stats</div>
+                <div class="widget-content" id="profile-widget-stats"></div>
             </div>
             
             <div class="widget">
-                <div class="widget-header">Popular Tags</div>
+                <div class="widget-header">Activity</div>
                 <div class="widget-content">
-                    <div class="tag-widget" id="widget-tags"></div>
+                    <div class="widget-stat">
+                        <span class="widget-stat-label">Member Since</span>
+                        <span class="widget-stat-value" id="member-since">--</span>
+                    </div>
+                    <div class="widget-stat">
+                        <span class="widget-stat-label">Last Active</span>
+                        <span class="widget-stat-value">Today</span>
+                    </div>
                 </div>
             </div>
             
             <div class="widget">
-                <div class="widget-header">Top Contributors</div>
-                <div class="widget-content" id="widget-users"></div>
+                <div class="widget-header">Quick Actions</div>
+                <div class="widget-content">
+                    <div class="widget-item"><a href="submit.html">Submit New Link</a></div>
+                    <div class="widget-item"><a href="list.html">Create New List</a></div>
+                    <div class="widget-item"><a href="dashboard.html">View Dashboard</a></div>
+                    <div class="widget-item"><a href="#" onclick="app.exportData(); return false;">Export Data</a></div>
+                </div>
             </div>
         </aside>
 
@@ -53,27 +66,56 @@
         <main>
             <div class="section-bar">
                 <span class="eyebrow">User Profile</span>
-                <span class="hint">your links, lists, and data</span>
+                <span class="hint">customize your space</span>
             </div>
 
-            <div class="profile-hero panel-block">
+            <!-- Profile Header with Background -->
+            <div class="profile-hero panel-block" id="profile-hero-container">
                 <div class="profile-identity">
                     <div class="profile-avatar" id="profile-avatar">PR</div>
                     <div>
-                        <p class="eyebrow small">logged in</p>
                         <h2 id="profile-username">User Profile</h2>
-                        <p class="profile-tagline">Manage your submissions, collections, and account data.</p>
+                        <p class="profile-tagline" id="profile-tagline">Portal Room user</p>
                     </div>
                 </div>
                 <div class="profile-metrics" id="profile-metrics"></div>
             </div>
 
+            <!-- Profile Customization -->
+            <div class="profile-customization panel-block">
+                <h3>Customize Profile</h3>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--text); margin-bottom: 0.4rem; font-weight: bold;">About / Bio</label>
+                    <textarea id="profile-bio" placeholder="Tell others about yourself..." style="width: 100%; min-height: 80px; padding: 0.6rem; background: var(--bg); border: 2px solid var(--edge); color: var(--text); font-family: 'Courier New', monospace; resize: vertical;"></textarea>
+                    <button onclick="app.saveBio()" style="margin-top: 0.5rem; padding: 0.5rem 1rem; border: 2px solid var(--accent); background: var(--accent); color: var(--bg); cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold;">Save Bio</button>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--text); margin-bottom: 0.4rem; font-weight: bold;">Background Image</label>
+                    <input type="url" id="profile-bg-url" placeholder="background image url (https://...)" style="width: 100%; padding: 0.6rem; margin-bottom: 0.5rem; background: var(--bg); border: 2px solid var(--edge); color: var(--text); font-family: 'Courier New', monospace;">
+                    <div class="profile-bg-preview" id="bg-preview"></div>
+                    <div class="profile-bg-options">
+                        <button onclick="app.setBackground('tiled')">Set Tiled</button>
+                        <button onclick="app.setBackground('full')">Set Full</button>
+                        <button onclick="app.clearBackground()">Clear</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--text); margin-bottom: 0.4rem; font-weight: bold;">Custom CSS <span style="color: var(--muted); font-size: 0.85rem; font-weight: normal;">(advanced)</span></label>
+                    <textarea id="custom-css-editor" class="css-editor" placeholder="/* Add your custom CSS here */&#10;.profile-hero {&#10;  /* your styles */&#10;}"></textarea>
+                    <button onclick="app.saveCustomCSS()" style="margin-top: 0.5rem; padding: 0.5rem 1rem; border: 2px solid var(--accent); background: var(--accent); color: var(--bg); cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold;">Apply CSS</button>
+                    <button onclick="app.clearCustomCSS()" style="margin-top: 0.5rem; margin-left: 0.5rem; padding: 0.5rem 1rem; border: 2px solid var(--error); background: var(--error); color: var(--bg); cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold;">Clear CSS</button>
+                </div>
+            </div>
+
+            <!-- Profile Content in Scrollboxes -->
             <div class="profile-content panel-block">
-                <div class="data-management">
-                    <h3>Data Management</h3>
-                    <button id="export-data" class="btn-export">export data</button>
-                    <button id="import-data" class="btn-import">import data</button>
-                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                <!-- About Section -->
+                <div class="profile-about" id="profile-about-display">
+                    <h3>About</h3>
+                    <p id="bio-content" style="color: var(--text); line-height: 1.6;">No bio set yet.</p>
                 </div>
 
                 <div class="profile-columns">
@@ -92,29 +134,46 @@
                         </div>
                         <div id="lists-container"></div>
                     </div>
+                    
+                    <div id="user-favorites" class="profile-column">
+                        <div class="column-header">
+                            <h3>Favorites</h3>
+                        </div>
+                        <div id="favorites-container"></div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Data Management -->
+            <div class="data-management">
+                <h3>Data Management</h3>
+                <button id="export-data" class="btn-export">export data</button>
+                <button id="import-data" class="btn-import">import data</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
             </div>
         </main>
 
         <!-- Right Sidebar -->
         <aside class="sidebar" id="right-sidebar">
             <div class="widget">
-                <div class="widget-header">Recent Activity</div>
+                <div class="widget-header">Your Activity</div>
+                <div class="widget-content" id="widget-user-activity"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Following</div>
+                <div class="widget-content" id="widget-following"></div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">Recent in Archive</div>
                 <div class="widget-content" id="widget-recent"></div>
             </div>
             
             <div class="widget">
-                <div class="widget-header">Most Upvoted</div>
-                <div class="widget-content" id="widget-top"></div>
-            </div>
-            
-            <div class="widget">
-                <div class="widget-header">Quick Actions</div>
+                <div class="widget-header">Popular Tags</div>
                 <div class="widget-content">
-                    <div class="widget-item"><a href="submit.html">Submit Link</a></div>
-                    <div class="widget-item"><a href="list.html">Create List</a></div>
-                    <div class="widget-item"><a href="dashboard.html">Dashboard</a></div>
-                    <div class="widget-item"><a href="top-links.html">Top Links</a></div>
+                    <div class="tag-widget" id="widget-tags"></div>
                 </div>
             </div>
         </aside>

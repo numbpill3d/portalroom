@@ -37,9 +37,10 @@
                     <p style="color: var(--muted); font-size: 0.85rem; line-height: 1.4;">
                         • Use descriptive titles<br>
                         • Add relevant tags<br>
-                        • Include a description<br>
+                        • Select a category<br>
                         • Check for duplicates<br>
-                        • Use the fetch button
+                        • Use the fetch button<br>
+                        • Optional: add 88x31 button
                     </p>
                 </div>
             </div>
@@ -67,14 +68,45 @@
                 <h2>New Link Submission</h2>
                 <p class="dungeon-subtitle">Share a link with the community. Fill out the form below to add it to the archive.</p>
                 <form id="link-form">
-                    <input type="url" id="link-url" placeholder="url (https://example.com)" required>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="text" id="link-title" placeholder="title" required style="flex: 1;">
-                        <button type="button" id="fetch-meta" style="padding: 0.6rem; border: 1px solid var(--edge); background: var(--panel); color: var(--accent); font-family: 'Courier New', monospace; cursor: pointer;">fetch</button>
+                    <label for="link-url" style="color: var(--text); font-size: 0.9rem; display: block; margin-bottom: 0.3rem;">URL *</label>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.8rem;">
+                        <input type="url" id="link-url" placeholder="https://example.com" required style="flex: 1; margin-bottom: 0;">
+                        <button type="button" id="fetch-meta" style="padding: 0.6rem 1rem; border: 1px solid var(--edge); background: var(--accent); color: var(--bg); font-family: 'Courier New', monospace; font-weight: bold; cursor: pointer; white-space: nowrap;">fetch metadata</button>
                     </div>
-                    <textarea id="link-description" placeholder="description (optional)"></textarea>
-                    <input type="text" id="link-tags" placeholder="tags (comma separated)">
-                    <input type="url" id="link-thumbnail" placeholder="thumbnail url (optional)">
+                    
+                    <label for="link-title" style="color: var(--text); font-size: 0.9rem; display: block; margin-bottom: 0.3rem;">Title *</label>
+                    <input type="text" id="link-title" placeholder="site title" required>
+                    
+                    <label for="link-description" style="color: var(--text); font-size: 0.9rem; display: block; margin-bottom: 0.3rem;">Description</label>
+                    <textarea id="link-description" placeholder="brief description (optional)"></textarea>
+                    
+                    <label for="link-category" style="color: var(--text); font-size: 0.9rem; display: block; margin-bottom: 0.3rem;">Category *</label>
+                    <select id="link-category" required style="width: 100%; padding: 0.6rem; margin-bottom: 0.8rem; border: 1px solid var(--edge); background: var(--bg); color: var(--text); font-size: 0.9rem; font-family: 'Courier New', monospace;">
+                        <option value="">-- select category --</option>
+                        <option value="social">social</option>
+                        <option value="forum">forum</option>
+                        <option value="blog">blog</option>
+                        <option value="personal">personal</option>
+                        <option value="art">art</option>
+                        <option value="utility">utility</option>
+                        <option value="weird">weird</option>
+                        <option value="music">music</option>
+                        <option value="tech">tech</option>
+                        <option value="gaming">gaming</option>
+                        <option value="other">other</option>
+                    </select>
+                    
+                    <label for="link-tags" style="color: var(--text); font-size: 0.9rem; display: block; margin-bottom: 0.3rem;">Tags</label>
+                    <input type="text" id="link-tags" placeholder="comma, separated, tags">
+                    
+                    <label for="link-button" style="color: var(--text); font-size: 0.9rem; display: block; margin-bottom: 0.3rem;">88x31 Button URL <span style="color: var(--muted); font-size: 0.8rem;">(optional)</span></label>
+                    <input type="url" id="link-button" placeholder="https://example.com/button.gif">
+                    
+                    <div id="thumbnail-preview" style="margin: 0.8rem 0; display: none;">
+                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 0.3rem;">Thumbnail Preview:</p>
+                        <img id="thumbnail-img" style="max-width: 200px; border: 1px solid var(--edge); display: block;">
+                    </div>
+                    
                     <button type="submit">submit link</button>
                 </form>
             </div>

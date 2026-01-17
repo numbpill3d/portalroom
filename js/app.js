@@ -412,19 +412,34 @@ class PortalRoom {
             const url = document.getElementById('link-url').value.trim();
             const title = document.getElementById('link-title').value.trim();
             const description = document.getElementById('link-description').value.trim();
+            const category = document.getElementById('link-category').value;
+            const button = document.getElementById('link-button').value.trim();
             const tags = document.getElementById('link-tags').value
                 .split(',')
                 .map(tag => tag.trim())
                 .filter(tag => tag);
-            const thumbnail = document.getElementById('link-thumbnail').value.trim();
+            
+            // Get thumbnail from preview or empty string
+            const thumbnailImg = document.getElementById('thumbnail-img');
+            const thumbnail = thumbnailImg && thumbnailImg.src && thumbnailImg.src.startsWith('http') ? thumbnailImg.src : '';
 
             if (!url || !title) {
                 this.showNotification('URL and title are required', 'error');
                 return;
             }
 
+            if (!category) {
+                this.showNotification('Please select a category', 'error');
+                return;
+            }
+
             if (!this.validateUrl(url)) {
                 this.showNotification('Please enter a valid URL (http/https)', 'error');
+                return;
+            }
+
+            if (button && !this.validateUrl(button)) {
+                this.showNotification('Please enter a valid button URL', 'error');
                 return;
             }
 
@@ -443,8 +458,10 @@ class PortalRoom {
                 url: this.sanitizeHTML(url),
                 title: this.sanitizeHTML(title),
                 description: this.sanitizeHTML(description),
+                category: this.sanitizeHTML(category),
                 tags: normalizedTags.map(tag => this.sanitizeHTML(tag)).slice(0, 8),
-                thumbnail: this.sanitizeHTML(thumbnail),
+                thumbnail: thumbnail,
+                button: button ? this.sanitizeHTML(button) : '',
                 author: this.currentUser,
                 timestamp: new Date().toISOString(),
                 comments: [],
@@ -986,6 +1003,8 @@ class PortalRoom {
         const titleInput = document.getElementById('link-title');
         const descInput = document.getElementById('link-description');
         const fetchBtn = document.getElementById('fetch-meta');
+        const thumbnailPreview = document.getElementById('thumbnail-preview');
+        const thumbnailImg = document.getElementById('thumbnail-img');
         const url = urlInput.value.trim();
 
         if (!url) {
@@ -1011,14 +1030,43 @@ class PortalRoom {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 const title = doc.querySelector('title')?.textContent || '';
-                const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') || 
+                const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') ||
                                    doc.querySelector('meta[property="og:description"]')?.getAttribute('content') || '';
+                
+                // Try to get thumbnail from various meta tags
+                let thumbnail = doc.querySelector('meta[property="og:image"]')?.getAttribute('content') ||
+                               doc.querySelector('meta[name="twitter:image"]')?.getAttribute('content') ||
+                               doc.querySelector('link[rel="icon"]')?.getAttribute('href') ||
+                               doc.querySelector('link[rel="shortcut icon"]')?.getAttribute('href') ||
+                               '';
+                
+                // If thumbnail is relative, make it absolute
+                if (thumbnail && !thumbnail.startsWith('http')) {
+                    try {
+                        const baseUrl = new URL(url);
+                        thumbnail = new URL(thumbnail, baseUrl.origin).href;
+                    } catch (e) {
+                        thumbnail = '';
+                    }
+                }
 
                 if (title && !titleInput.value) {
                     titleInput.value = title.trim();
                 }
                 if (description && !descInput.value) {
                     descInput.value = description.trim();
+                }
+                
+                // Display thumbnail preview
+                if (thumbnail && thumbnailImg && thumbnailPreview) {
+                    thumbnailImg.src = thumbnail;
+                    thumbnailImg.onerror = () => {
+                        thumbnailPreview.style.display = 'none';
+                        thumbnailImg.src = '';
+                    };
+                    thumbnailImg.onload = () => {
+                        thumbnailPreview.style.display = 'block';
+                    };
                 }
 
                 this.showNotification('Metadata fetched!', 'success');
@@ -1176,14 +1224,71 @@ class PortalRoom {
         const listsContainer = document.getElementById('lists-container');
         const metricsContainer = document.getElementById('profile-metrics');
         const avatar = document.getElementById('profile-avatar');
-
-        if (usernameElement) {
-            usernameElement.textContent = `${this.currentUser}'s Profile`;
-        }
+        const taglineElement = document.getElementById('profile-tagline');
+        const bioContent = document.getElementById('bio-content');
+        const bioTextarea = document.getElementById('profile-bio');
+        const memberSince = document.getElementById('member-since');
 
         const users = JSON.parse(localStorage.getItem('users') || '{}');
-        const userData = users[this.currentUser] || { links: [], lists: [] };
+        const userData = users[this.currentUser] || { links: [], lists: [], bio: '', customCSS: '', bgImage: '', bgStyle: 'tiled' };
         const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+
+        if (usernameElement) {
+            usernameElement.textContent = `${this.currentUser}`;
+        }
+
+        if (taglineElement && userData.bio) {
+            taglineElement.textContent = userData.bio.substring(0, 100);
+        }
+
+        if (bioContent) {
+            bioContent.textContent = userData.bio || 'No bio set yet.';
+        }
+
+        if (bioTextarea) {
+            bioTextarea.value = userData.bio || '';
+        }
+
+        if (memberSince && userData.joinedAt) {
+            const joined = new Date(userData.joinedAt);
+            memberSince.textContent = joined.toLocaleDateString();
+        }
+
+        // Load custom background
+        const profileHero = document.getElementById('profile-hero-container');
+        if (profileHero && userData.bgImage) {
+            if (userData.bgStyle === 'tiled') {
+                profileHero.style.backgroundImage = `url(${userData.bgImage})`;
+                profileHero.style.backgroundSize = 'auto';
+                profileHero.style.backgroundRepeat = 'repeat';
+            } else {
+                profileHero.style.backgroundImage = `url(${userData.bgImage})`;
+                profileHero.style.backgroundSize = 'cover';
+                profileHero.style.backgroundPosition = 'center';
+            }
+        }
+
+        // Load custom CSS
+        const customCSSElement = document.getElementById('user-custom-css');
+        const cssEditor = document.getElementById('custom-css-editor');
+        if (customCSSElement && userData.customCSS) {
+            customCSSElement.textContent = userData.customCSS;
+        }
+        if (cssEditor) {
+            cssEditor.value = userData.customCSS || '';
+        }
+
+        // Load background preview
+        const bgPreview = document.getElementById('bg-preview');
+        const bgUrlInput = document.getElementById('profile-bg-url');
+        if (bgPreview && bgUrlInput) {
+            bgUrlInput.value = userData.bgImage || '';
+            if (userData.bgImage) {
+                bgPreview.style.backgroundImage = `url(${userData.bgImage})`;
+                bgPreview.style.backgroundSize = userData.bgStyle === 'tiled' ? 'auto' : 'cover';
+            }
+        }
+
         const authoredComments = allLinks.reduce((sum, link) => {
             const comments = link.comments || [];
             return sum + comments.filter(c => c.author === this.currentUser).length;
@@ -1199,7 +1304,7 @@ class PortalRoom {
                 { label: 'Links Posted', value: userData.links?.length || 0 },
                 { label: 'Collections', value: userData.lists?.length || 0 },
                 { label: 'Comments', value: authoredComments },
-                { label: 'Links In Lists', value: linksInLists }
+                { label: 'Favorites', value: userData.favorites?.length || 0 }
             ];
 
             metricsContainer.innerHTML = stats.map(stat => `
@@ -1216,7 +1321,7 @@ class PortalRoom {
             userLinksList.innerHTML = '';
 
             if (userLinks.length === 0) {
-                userLinksList.innerHTML = '<p class="empty-state">You haven\'t submitted any links yet. <a href="submit.html">Submit one!</a></p>';
+                userLinksList.innerHTML = '<p class="empty-state">No links submitted yet.</p>';
             } else {
                 userLinks.slice().reverse().forEach(link => {
                     const linkElement = this.createLinkElement(link);
@@ -1231,7 +1336,7 @@ class PortalRoom {
             listsContainer.innerHTML = '';
 
             if (userLists.length === 0) {
-                listsContainer.innerHTML = '<p class="empty-state">You haven\'t created any lists yet. <a href="list.html">Create one!</a></p>';
+                listsContainer.innerHTML = '<p class="empty-state">No lists created yet.</p>';
             } else {
                 userLists.slice().reverse().forEach(list => {
                     const listElement = this.createListElement(list);
@@ -1247,7 +1352,7 @@ class PortalRoom {
             favoritesContainer.innerHTML = '';
 
             if (userFavorites.length === 0) {
-                favoritesContainer.innerHTML = '<p class="empty-state">No favorites yet. Favorite some links to see them here!</p>';
+                favoritesContainer.innerHTML = '<p class="empty-state">No favorites yet.</p>';
             } else {
                 userFavorites.forEach(linkId => {
                     const link = allLinks.find(l => l.id === linkId);
@@ -1267,37 +1372,15 @@ class PortalRoom {
                 dataManagement.innerHTML += `
                     <h4>GitHub Gists Sync</h4>
                     <input type="password" id="github-token" placeholder="GitHub Personal Access Token">
-                    <button id="export-gist" class="btn-export">📤 Export to Gist</button>
+                    <button id="export-gist" class="btn-export">export to gist</button>
                     <input type="text" id="gist-id" placeholder="Gist ID to Import">
-                    <button id="import-gist" class="btn-import">📥 Import from Gist</button>
+                    <button id="import-gist" class="btn-import">import from gist</button>
                 `;
             }
         }
 
-        const profileColumns = document.querySelector('.profile-columns');
-        if (profileColumns) {
-            const followsContainer = document.createElement('div');
-            followsContainer.className = 'profile-column';
-            profileColumns.appendChild(followsContainer);
-
-            const userFollows = userData.follows || [];
-
-            followsContainer.innerHTML = `
-                <div class="column-header">
-                    <h3>Followed Users</h3>
-                </div>
-                ${userFollows.length === 0 ? '<p class="empty-state">Not following anyone yet.</p>' : userFollows.map(followed => `
-                    <div class="followed-user">
-                        <span>${followed}</span>
-                        <button onclick="app.unfollowUser('${followed}')">Unfollow</button>
-                    </div>
-                `).join('')}
-                <div class="follow-form">
-                    <input type="text" id="follow-username" placeholder="username to follow">
-                    <button onclick="app.followUser(document.getElementById('follow-username').value)">Follow</button>
-                </div>
-            `;
-        }
+        // Populate profile widgets
+        this.populateProfileWidgets();
     }
 
     renderViewList() {
@@ -1388,6 +1471,9 @@ class PortalRoom {
         const isAuthor = this.currentUser === link.author;
         const tags = Array.isArray(link.tags) ? link.tags : [];
         const description = link.description || '';
+        const category = link.category || '';
+        const button = link.button || '';
+        
         const actionButtons = isAuthor ? `
             <div class="link-actions">
                 <button class="btn-edit" onclick="app.editLink(${link.id})">Edit</button>
@@ -1398,16 +1484,20 @@ class PortalRoom {
         const listSelector = this.currentUser ? this.createListSelector(link.id) : '';
         const upvotes = link.upvotes || 0;
         const downvotes = link.downvotes || 0;
+        
+        const categoryBadge = category ? `<span class="tag" style="background: var(--accent); color: var(--bg); font-weight: bold;">[${category}]</span>` : '';
+        const buttonDisplay = button ? `<div style="margin: 0.5rem 0;"><img src="${button}" alt="site button" style="max-width: 88px; height: auto; border: 1px solid var(--edge); image-rendering: pixelated;" onerror="this.style.display='none'"></div>` : '';
 
         element.innerHTML = `
             <div class="link-header">
                 <h3><a href="${link.url}" target="_blank">${link.title}</a></h3>
                 ${actionButtons}
             </div>
-            ${link.thumbnail ? `<img src="${link.thumbnail}" alt="Thumbnail" class="link-thumbnail">` : ''}
+            ${link.thumbnail ? `<img src="${link.thumbnail}" alt="Thumbnail" class="link-thumbnail" onerror="this.style.display='none'">` : ''}
+            ${buttonDisplay}
             <p>${this.simpleMarkdown(description)}</p>
             <small>by ${this.sanitizeHTML(link.author)} | ${new Date(link.timestamp).toLocaleDateString()}</small>
-            <div class="tags">${tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
+            <div class="tags">${categoryBadge} ${tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
             ${listSelector}
             <div class="voting">
                 <button onclick="app.voteLink(${link.id}, 'up')" class="vote-btn up">👍 ${upvotes}</button>
@@ -1789,6 +1879,170 @@ ${rssItems}
                 <span style="color: var(--muted);">by ${this.sanitizeHTML(link.author)}</span>
             </span>
         `).join('');
+    }
+
+    // Profile customization functions
+    saveBio() {
+        if (!this.currentUser) return;
+        
+        const bioTextarea = document.getElementById('profile-bio');
+        const bio = bioTextarea.value.trim();
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (!users[this.currentUser]) return;
+        
+        users[this.currentUser].bio = bio;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        this.showNotification('Bio saved!', 'success');
+        this.renderPage();
+    }
+
+    setBackground(style) {
+        if (!this.currentUser) return;
+        
+        const bgUrlInput = document.getElementById('profile-bg-url');
+        const bgUrl = bgUrlInput.value.trim();
+        
+        if (!bgUrl) {
+            this.showNotification('Enter a background image URL first', 'error');
+            return;
+        }
+        
+        if (!this.validateUrl(bgUrl)) {
+            this.showNotification('Enter a valid image URL', 'error');
+            return;
+        }
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (!users[this.currentUser]) return;
+        
+        users[this.currentUser].bgImage = bgUrl;
+        users[this.currentUser].bgStyle = style;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        this.showNotification(`Background set as ${style}!`, 'success');
+        this.renderPage();
+    }
+
+    clearBackground() {
+        if (!this.currentUser) return;
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (!users[this.currentUser]) return;
+        
+        users[this.currentUser].bgImage = '';
+        users[this.currentUser].bgStyle = 'tiled';
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        this.showNotification('Background cleared!', 'success');
+        this.renderPage();
+    }
+
+    saveCustomCSS() {
+        if (!this.currentUser) return;
+        
+        const cssEditor = document.getElementById('custom-css-editor');
+        const customCSS = cssEditor.value.trim();
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (!users[this.currentUser]) return;
+        
+        users[this.currentUser].customCSS = customCSS;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Apply CSS immediately
+        const styleElement = document.getElementById('user-custom-css');
+        if (styleElement) {
+            styleElement.textContent = customCSS;
+        }
+        
+        this.showNotification('Custom CSS applied!', 'success');
+    }
+
+    clearCustomCSS() {
+        if (!this.currentUser) return;
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (!users[this.currentUser]) return;
+        
+        users[this.currentUser].customCSS = '';
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        const styleElement = document.getElementById('user-custom-css');
+        if (styleElement) {
+            styleElement.textContent = '';
+        }
+        
+        const cssEditor = document.getElementById('custom-css-editor');
+        if (cssEditor) {
+            cssEditor.value = '';
+        }
+        
+        this.showNotification('Custom CSS cleared!', 'success');
+    }
+
+    populateProfileWidgets() {
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const userData = users[this.currentUser] || {};
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        
+        // Profile stats widget
+        const profileStatsWidget = document.getElementById('profile-widget-stats');
+        if (profileStatsWidget) {
+            const totalUpvotes = (userData.links || []).reduce((sum, link) => sum + (link.upvotes || 0), 0);
+            const totalComments = allLinks.reduce((sum, link) => {
+                const comments = link.comments || [];
+                return sum + comments.filter(c => c.author === this.currentUser).length;
+            }, 0);
+            
+            profileStatsWidget.innerHTML = `
+                <div class="widget-stat">
+                    <span class="widget-stat-label">Total Upvotes</span>
+                    <span class="widget-stat-value">${totalUpvotes}</span>
+                </div>
+                <div class="widget-stat">
+                    <span class="widget-stat-label">Comments Made</span>
+                    <span class="widget-stat-value">${totalComments}</span>
+                </div>
+                <div class="widget-stat">
+                    <span class="widget-stat-label">Following</span>
+                    <span class="widget-stat-value">${userData.follows?.length || 0}</span>
+                </div>
+            `;
+        }
+        
+        // Following widget
+        const followingWidget = document.getElementById('widget-following');
+        if (followingWidget) {
+            const userFollows = userData.follows || [];
+            
+            if (userFollows.length === 0) {
+                followingWidget.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">Not following anyone</p>';
+            } else {
+                followingWidget.innerHTML = userFollows.map(user => `
+                    <div class="widget-item">
+                        <span style="color: var(--text);">${this.sanitizeHTML(user)}</span>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // User activity widget
+        const activityWidget = document.getElementById('widget-user-activity');
+        if (activityWidget) {
+            const recentUserLinks = (userData.links || []).slice(-3).reverse();
+            
+            if (recentUserLinks.length === 0) {
+                activityWidget.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No recent activity</p>';
+            } else {
+                activityWidget.innerHTML = recentUserLinks.map(link => `
+                    <div class="widget-item">
+                        <a href="${link.url}" target="_blank" title="${this.sanitizeHTML(link.title)}">${this.sanitizeHTML(link.title)}</a>
+                    </div>
+                `).join('');
+            }
+        }
     }
 }
 
