@@ -209,6 +209,7 @@ nav a.active {
     display: flex;
     gap: 2rem;
     padding-left: 100px;
+    animation: slide 30s linear infinite;
 }
 
 .ticker-item {
@@ -225,6 +226,15 @@ nav a.active {
     text-decoration: underline;
 }
 
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
 
 
 /* Layout Container */
@@ -232,12 +242,13 @@ nav a.active {
     max-width: 1200px;
     margin: 1rem auto;
     padding: 0 1rem;
+    display: grid;
+    grid-template-columns: 240px 1fr 240px;
+    gap: 1rem;
 }
 
 /* Sidebar */
 .sidebar {
-    position: sticky;
-    top: 200px;
     height: fit-content;
     max-height: calc(100vh - 220px);
     overflow-y: auto;
