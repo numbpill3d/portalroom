@@ -134,6 +134,7 @@ header {
     left: 0;
     right: 0;
     z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 header pre {
@@ -152,24 +153,21 @@ nav {
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 0.5rem;
+    background: var(--bg);
+    border: 1px solid var(--edge);
+    padding: 0.25rem;
+    border-radius: 4px;
 }
 
 nav a {
     color: var(--link);
     padding: 0.4rem 0.8rem;
-    background: var(--bg);
-    border: 1px solid var(--edge);
-    border-right: none;
+    background: transparent;
+    border: none;
     text-decoration: none;
     font-size: 0.9rem;
-}
-
-nav a:first-child {
-    border-left: 1px solid var(--edge);
-}
-
-nav a:last-child {
-    border-right: 1px solid var(--edge);
+    border-radius: 3px;
+    transition: all 0.2s ease;
 }
 
 nav a:hover {
@@ -240,7 +238,7 @@ nav a.active {
 /* Layout Container */
 .layout-container {
     max-width: 1200px;
-    margin: 1rem auto;
+    margin: 110px auto 1rem;
     padding: 0 1rem;
     display: grid;
     grid-template-columns: 240px 1fr 240px;
@@ -252,6 +250,10 @@ nav a.active {
     height: fit-content;
     max-height: calc(100vh - 220px);
     overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--edge);
+    padding: 0.5rem;
+    border-radius: 4px;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -387,7 +389,10 @@ nav a.active {
 /* Main Content Area */
 main {
     min-height: 400px;
-    padding-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg);
+    border: 1px solid var(--edge);
+    border-radius: 4px;
 }
 
 .page-shell {
