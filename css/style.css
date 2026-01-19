@@ -7,13 +7,13 @@
     --bg: #000000;
     --bg-2: #111111;
     --panel: #000000;
-    --panel-border: #ffffff;
-    --edge: #555555;
+    --panel-border: #333333;
+    --edge: #666666;
     --accent: #ffff00;
-    --accent-2: #ffff88;
-    --accent-dim: #aaaa00;
-    --purple: #880088;
-    --purple-dim: #440044;
+    --accent-2: #aaaa00;
+    --accent-dim: #666600;
+    --purple: #00ff00;
+    --purple-dim: #006600;
     --text: #00ff00;
     --text-bright: #ffffff;
     --muted: #666666;
@@ -58,29 +58,10 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     font-size: 14px;
-    background-image:
-        url('https://ibb.co/mxy0jHB'),
-        repeating-linear-gradient(0deg, rgba(139, 95, 191, 0.03) 0px, transparent 1px, transparent 2px, rgba(139, 95, 191, 0.03) 3px),
-        repeating-linear-gradient(90deg, rgba(212, 175, 55, 0.02) 0px, transparent 1px, transparent 2px, rgba(212, 175, 55, 0.02) 3px);
-    background-repeat: repeat, repeat, repeat;
-    background-size: auto, auto, auto;
     position: relative;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.005) 0px, transparent 1px, transparent 3px),
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.005) 0px, transparent 1px, transparent 3px);
-    background-size: 8px 8px;
-    pointer-events: none;
-    z-index: 0;
-}
+
 
 
 
@@ -90,7 +71,9 @@ a {
 }
 
 a:hover {
-    color: var(--link-hover);
+    background: var(--link);
+    color: var(--bg);
+    text-decoration: none;
 }
 
 a:visited {
@@ -134,7 +117,6 @@ header {
     left: 0;
     right: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 header pre {
@@ -154,9 +136,8 @@ nav {
     flex-wrap: wrap;
     margin-top: 0.5rem;
     background: var(--bg);
-    border: 1px solid var(--edge);
+    border: inset 2px var(--edge);
     padding: 0.25rem;
-    border-radius: 4px;
 }
 
 nav a {
@@ -166,8 +147,6 @@ nav a {
     border: none;
     text-decoration: none;
     font-size: 0.9rem;
-    border-radius: 3px;
-    transition: all 0.2s ease;
 }
 
 nav a:hover {
@@ -221,7 +200,9 @@ nav a.active {
 }
 
 .ticker-item a:hover {
-    text-decoration: underline;
+    background: var(--link);
+    color: var(--bg);
+    text-decoration: none;
 }
 
 @keyframes slide {
@@ -243,19 +224,20 @@ nav a.active {
     display: flex;
     gap: 1rem;
     align-items: flex-start;
+    margin-left: 260px;
 }
 
 /* Sidebar */
 .sidebar {
     width: 240px;
-    flex-shrink: 0;
-    height: fit-content;
-    max-height: calc(100vh - 140px);
+    position: fixed;
+    left: 0;
+    top: 120px;
+    height: calc(100vh - 120px);
     overflow-y: auto;
     background: var(--bg);
-    border: 1px solid var(--edge);
+    border: 2px solid var(--panel-border);
     padding: 0.5rem;
-    border-radius: 4px;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -278,8 +260,8 @@ nav a.active {
 
 /* Widget */
 .widget {
-    background: var(--panel);
-    border: 2px solid var(--edge);
+    background: var(--bg-2);
+    border: 2px solid var(--panel-border);
     margin-bottom: 1rem;
 }
 
@@ -379,7 +361,6 @@ nav a.active {
     color: var(--accent);
     text-decoration: none;
     display: inline-block;
-    transition: all 0.15s ease;
 }
 
 .tag-widget-item:hover {
@@ -395,7 +376,6 @@ main {
     padding: 0.5rem;
     background: var(--bg);
     border: 1px solid var(--edge);
-    border-radius: 4px;
 }
 
 .page-shell {
@@ -432,8 +412,8 @@ main {
 .list-form,
 .profile-content,
 .profile-hero {
-    background: var(--panel);
-    border: 2px solid var(--edge);
+    background: #0f0f0f;
+    border: 4px solid var(--edge);
     padding: 1.8rem;
     margin-bottom: 1.2rem;
 }
@@ -467,13 +447,17 @@ main {
     cursor: pointer;
     text-decoration: none;
     font-size: 0.9rem;
-    box-shadow: 1px 1px 0 var(--edge);
 }
 
 .btn-primary:hover,
 .btn-ghost:hover {
     background: var(--accent);
     color: var(--bg);
+}
+
+.btn-primary:active,
+.btn-ghost:active {
+    border-style: inset;
 }
 
 .cta-buttons {
@@ -587,6 +571,20 @@ label {
 
 .search-filter h3 {
     flex-basis: 100%;
+}
+
+.panel-block h3 {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 0.5rem 0.8rem;
+    margin: -1.8rem -1.8rem 1rem -1.8rem;
+    border-bottom: 2px solid var(--edge);
+    text-transform: uppercase;
+    font-size: 1.2rem;
+}
+
+.panel-block h3:before {
+    content: '==== ';
 }
 
 .search-filter input,
@@ -783,7 +781,6 @@ label {
     font-family: 'Courier New', monospace;
     font-weight: bold;
     font-size: 0.85rem;
-    transition: all 0.2s ease;
 }
 
 .add-to-list button:hover {
@@ -1368,6 +1365,23 @@ a:focus {
 .loading {
     opacity: 0.5;
     pointer-events: none;
+}
+
+/* Status Log */
+.status-log {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    color: var(--text);
+    border-top: 2px solid var(--edge);
+    padding: 0.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 90;
 }
 
 /* Subtle animations */

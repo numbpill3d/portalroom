@@ -22,6 +22,7 @@ class PortalRoom {
         this.setupKeyboardShortcuts();
         this.loadTheme();
         this.addThemeToggle();
+        this.addStatusLog();
         this.populateWidgets();
         this.startTicker();
     }
@@ -1986,7 +1987,7 @@ ${rssItems}
         const users = JSON.parse(localStorage.getItem('users') || '{}');
         const userData = users[this.currentUser] || {};
         const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
-        
+
         // Profile stats widget
         const profileStatsWidget = document.getElementById('profile-widget-stats');
         if (profileStatsWidget) {
@@ -1995,7 +1996,7 @@ ${rssItems}
                 const comments = link.comments || [];
                 return sum + comments.filter(c => c.author === this.currentUser).length;
             }, 0);
-            
+
             profileStatsWidget.innerHTML = `
                 <div class="widget-stat">
                     <span class="widget-stat-label">Total Upvotes</span>
@@ -2011,12 +2012,12 @@ ${rssItems}
                 </div>
             `;
         }
-        
+
         // Following widget
         const followingWidget = document.getElementById('widget-following');
         if (followingWidget) {
             const userFollows = userData.follows || [];
-            
+
             if (userFollows.length === 0) {
                 followingWidget.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">Not following anyone</p>';
             } else {
@@ -2027,12 +2028,12 @@ ${rssItems}
                 `).join('');
             }
         }
-        
+
         // User activity widget
         const activityWidget = document.getElementById('widget-user-activity');
         if (activityWidget) {
             const recentUserLinks = (userData.links || []).slice(-3).reverse();
-            
+
             if (recentUserLinks.length === 0) {
                 activityWidget.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No recent activity</p>';
             } else {
@@ -2043,6 +2044,16 @@ ${rssItems}
                 `).join('');
             }
         }
+    }
+
+    addStatusLog() {
+        if (document.getElementById('status-log')) return;
+        const log = document.createElement('div');
+        log.id = 'status-log';
+        log.className = 'status-log';
+        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
+        log.innerHTML = `[SYSTEM] Portal loaded at ${new Date().toLocaleString()}<br>[SYSTEM] User: ${this.currentUser || 'guest'}<br>[SYSTEM] Links loaded: ${allLinks.length}<br>`;
+        document.body.appendChild(log);
     }
 }
 
