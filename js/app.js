@@ -112,7 +112,7 @@ class PortalRoom {
                 case 'H':
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        window.location.href = 'index.html';
+                        window.location.href = '/';
                         this.showNotification('returning home...', 'info');
                     }
                     break;
@@ -120,7 +120,7 @@ class PortalRoom {
                 case 'D':
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        window.location.href = 'dashboard.html';
+                        window.location.href = '/dashboard';
                         this.showNotification('loading dashboard...', 'info');
                     }
                     break;
@@ -128,7 +128,7 @@ class PortalRoom {
                 case 'S':
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        window.location.href = 'submit.html';
+                        window.location.href = '/submit';
                         this.showNotification('opening submit form...', 'info');
                     }
                     break;
@@ -136,7 +136,7 @@ class PortalRoom {
                 case 'P':
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        window.location.href = 'profile.html';
+                        window.location.href = '/profile';
                         this.showNotification('loading profile...', 'info');
                     }
                     break;
@@ -210,12 +210,12 @@ class PortalRoom {
 
     // Check authentication for protected pages
     checkAuth() {
-        const protectedPages = ['dashboard.html', 'submit.html', 'profile.html', 'list.html'];
+        const protectedPages = ['dashboard', 'submit', 'profile', 'list'];
         const currentPage = window.location.pathname.split('/').pop();
 
         if (protectedPages.includes(currentPage) && !this.currentUser) {
             this.showNotification('Please log in to access this page', 'error');
-            setTimeout(() => window.location.href = 'login.html', 1000);
+            setTimeout(() => window.location.href = '/login', 1000);
         }
     }
 
@@ -226,12 +226,12 @@ class PortalRoom {
     redirectAuthenticatedFromAuthPages() {
         if (!this.currentUser) return;
 
-        const authPages = ['login.html', 'register.html'];
+        const authPages = ['login', 'register'];
         const currentPage = window.location.pathname.split('/').pop();
 
         if (authPages.includes(currentPage)) {
             this.showNotification('already logged in, redirecting...', 'info');
-            setTimeout(() => window.location.href = 'dashboard.html', 600);
+            setTimeout(() => window.location.href = '/dashboard', 600);
         }
     }
 
@@ -340,7 +340,7 @@ class PortalRoom {
                 try {
                     await auth.signInWithEmailAndPassword(email, password);
                     this.showNotification('Login successful!', 'success');
-                    setTimeout(() => window.location.href = 'dashboard.html', 500);
+                    setTimeout(() => window.location.href = '/dashboard', 500);
                     return;
                 } catch (error) {
                     this.showNotification(error.message, 'error');
@@ -391,7 +391,7 @@ class PortalRoom {
                 this.currentUser = username;
                 localStorage.setItem('currentUser', username);
                 this.showNotification('Login successful (local mode)!', 'success');
-                setTimeout(() => window.location.href = 'dashboard.html', 500);
+                setTimeout(() => window.location.href = '/dashboard', 500);
             } else {
                 this.incrementFailedAttempts(username, failedAttempts);
                 this.showNotification('Invalid credentials', 'error');
@@ -457,16 +457,20 @@ class PortalRoom {
                 try {
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const user = userCredential.user;
-                    
+
                     if (db) {
-                        await db.collection('profiles').doc(user.uid).set({
-                            username: username,
-                            joined_at: firebase.firestore.FieldValue.serverTimestamp()
-                        });
+                        try {
+                            await db.collection('profiles').doc(user.uid).set({
+                                username: username,
+                                joined_at: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        } catch (profileError) {
+                            console.error('Profile write failed:', profileError);
+                        }
                     }
 
                     this.showNotification('Registration successful!', 'success');
-                    setTimeout(() => window.location.href = 'dashboard.html', 500);
+                    setTimeout(() => window.location.href = '/dashboard', 500);
                 } catch (error) {
                     this.showNotification(error.message, 'error');
                 }
@@ -497,7 +501,7 @@ class PortalRoom {
             this.currentUser = username;
             localStorage.setItem('currentUser', username);
             this.showNotification('Registration successful (local mode)!', 'success');
-            setTimeout(() => window.location.href = 'dashboard.html', 500);
+            setTimeout(() => window.location.href = '/dashboard', 500);
         } catch (error) {
             console.error('Registration error:', error);
             this.showNotification('Registration failed. Please try again.', 'error');
@@ -572,7 +576,7 @@ class PortalRoom {
                     });
 
                     this.showNotification('Link submitted successfully!', 'success');
-                    setTimeout(() => window.location.href = 'dashboard.html', 500);
+                    setTimeout(() => window.location.href = '/dashboard', 500);
                     return;
                 } catch (error) {
                     this.showNotification(error.message, 'error');
@@ -629,7 +633,7 @@ class PortalRoom {
             localStorage.setItem('allLinks', JSON.stringify(allLinks));
 
             this.showNotification('Link submitted successfully (local)!', 'success');
-            setTimeout(() => window.location.href = 'dashboard.html', 500);
+            setTimeout(() => window.location.href = '/dashboard', 500);
         } catch (error) {
             console.error('Submission error:', error);
             this.showNotification('Failed to submit link. Please try again.', 'error');
@@ -669,7 +673,7 @@ class PortalRoom {
             localStorage.setItem('users', JSON.stringify(users));
 
             this.showNotification('List created successfully!', 'success');
-            setTimeout(() => window.location.href = 'profile.html', 500);
+            setTimeout(() => window.location.href = '/profile', 500);
         } catch (error) {
             this.showNotification('Failed to create list. Please try again.', 'error');
         }
@@ -691,7 +695,7 @@ class PortalRoom {
         this.session = null;
         localStorage.removeItem('currentUser');
         this.showNotification('Logged out successfully', 'success');
-        setTimeout(() => window.location.href = 'index.html', 500);
+        setTimeout(() => window.location.href = '/', 500);
     }
 
     handleSearch(e) {
@@ -1305,26 +1309,26 @@ class PortalRoom {
         const path = window.location.pathname.split('/').pop();
 
         switch(path) {
-            case 'index.html':
             case '':
+            case 'index':
                 await this.renderHome();
                 break;
-            case 'dashboard.html':
+            case 'dashboard':
                 await this.renderDashboard();
                 break;
-            case 'profile.html':
+            case 'profile':
                 await this.renderProfile();
                 break;
-            case 'view-list.html':
+            case 'view-list':
                 await this.renderViewList();
                 break;
-            case 'top-links.html':
+            case 'top-links':
                 await this.renderTopLinks();
                 break;
-            case 'tags.html':
+            case 'tags':
                 await this.renderTags();
                 break;
-            case 'domain.html':
+            case 'domain':
                 await this.renderDomainPage();
                 break;
         }
@@ -1948,33 +1952,13 @@ class PortalRoom {
         }
     }
 
-    toggleTheme() {
-        const current = document.body.getAttribute('data-theme') || 'dark';
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        this.showNotification(`Switched to ${newTheme} mode`, 'info');
-    }
-
     addThemeToggle() {
         const nav = document.querySelector('nav');
         if (!nav) return;
 
-        const button = document.createElement('a');
-        button.href = '#';
-        button.textContent = '🌙';
-        button.style.cssText = 'font-size: 1.5rem; padding: 0.5rem; cursor: pointer;';
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.toggleTheme();
-        });
-        nav.appendChild(button);
-
-        // Add RSS link
         const rssLink = document.createElement('a');
         rssLink.href = '#';
-        rssLink.textContent = 'RSS';
-        rssLink.style.cssText = 'padding: 0.65rem 1.2rem;';
+        rssLink.textContent = 'rss';
         rssLink.addEventListener('click', (e) => {
             e.preventDefault();
             this.generateRSS();
