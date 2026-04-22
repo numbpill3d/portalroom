@@ -95,9 +95,78 @@ class PortalRoom {
         return JSON.parse(localStorage.getItem('allLinks') || '[]');
     }
 
-    // Setup page
     setupDungeonAmbiance() {
-        // Placeholder for future effects
+        if (document.getElementById('topology-canvas')) return;
+
+        const canvas = document.createElement('canvas');
+        canvas.id = 'topology-canvas';
+        document.body.insertBefore(canvas, document.body.firstChild);
+
+        const ctx = canvas.getContext('2d');
+        const NODES = 52;
+        const LINK_DIST = 155;
+        const nodes = [];
+        let w, h;
+
+        const resize = () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resize);
+        resize();
+
+        for (let i = 0; i < NODES; i++) {
+            nodes.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.22,
+                vy: (Math.random() - 0.5) * 0.22,
+                r: i < 7 ? 2.8 : 1.3,
+                pulse: Math.random() * Math.PI * 2,
+                ps: 0.012 + Math.random() * 0.016
+            });
+        }
+
+        const frame = () => {
+            ctx.clearRect(0, 0, w, h);
+
+            nodes.forEach(n => {
+                n.x += n.vx;
+                n.y += n.vy;
+                n.pulse += n.ps;
+                if (n.x < 0 || n.x > w) n.vx *= -1;
+                if (n.y < 0 || n.y > h) n.vy *= -1;
+            });
+
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const d = Math.sqrt(dx * dx + dy * dy);
+                    if (d < LINK_DIST) {
+                        const a = (1 - d / LINK_DIST) * 0.18;
+                        ctx.strokeStyle = `rgba(180, 0, 22, ${a})`;
+                        ctx.lineWidth = 0.55;
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            nodes.forEach(n => {
+                const a = 0.38 + Math.sin(n.pulse) * 0.18;
+                ctx.fillStyle = `rgba(204, 0, 30, ${a})`;
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(frame);
+        };
+
+        frame();
     }
 
     // Setup keyboard shortcuts for power users
@@ -2443,13 +2512,34 @@ ${rssItems}
     }
 
     addStatusLog() {
-        if (document.getElementById('status-log')) return;
-        const log = document.createElement('div');
-        log.id = 'status-log';
-        log.className = 'status-log';
-        const allLinks = JSON.parse(localStorage.getItem('allLinks') || '[]');
-        log.innerHTML = `[SYSTEM] Portal loaded at ${new Date().toLocaleString()}<br>[SYSTEM] User: ${this.currentUser || 'guest'}<br>[SYSTEM] Links loaded: ${allLinks.length}<br>`;
-        document.body.appendChild(log);
+        const sidebar = document.getElementById('left-sidebar');
+        if (!sidebar || document.getElementById('widget-sysinfo')) return;
+
+        const widget = document.createElement('div');
+        widget.className = 'widget';
+        widget.id = 'widget-sysinfo';
+        const user = this.currentUser
+            ? (this.currentUser.includes('@') ? this.currentUser.split('@')[0] : this.currentUser)
+            : 'guest';
+        const mode = db ? 'firebase' : 'local';
+        widget.innerHTML = `
+            <div class="widget-header">Status</div>
+            <div class="widget-content">
+                <div class="widget-stat">
+                    <span class="widget-stat-label">user</span>
+                    <span class="widget-stat-value" style="font-size:0.65rem;max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${user}</span>
+                </div>
+                <div class="widget-stat">
+                    <span class="widget-stat-label">backend</span>
+                    <span class="widget-stat-value">${mode}</span>
+                </div>
+                <div class="widget-stat">
+                    <span class="widget-stat-label">ready</span>
+                    <span class="widget-stat-value" style="color:var(--green);">yes</span>
+                </div>
+            </div>
+        `;
+        sidebar.appendChild(widget);
     }
 
     flagDeadLink(linkId) {

@@ -29,23 +29,25 @@
     box-sizing: border-box;
 }
 
+html {
+    background-color: #000;
+}
+
 body {
     font-family: 'MS Gothic', 'MS PGothic', '\30DCMS\30B4\30B7\30C3\30AF', monospace;
-    background-color: #020202;
-    background-image:
-        linear-gradient(#0f0f0f 1px, transparent 1px),
-        linear-gradient(90deg, #0f0f0f 1px, transparent 1px);
-    background-size: 24px 24px;
+    background: transparent;
     color: var(--text);
     line-height: 1.5;
     min-height: 100vh;
     font-size: 13px;
-    animation: bg-scroll 3s linear infinite;
 }
 
-@keyframes bg-scroll {
-    from { background-position: 0 0; }
-    to   { background-position: 24px 24px; }
+#topology-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
 }
 
 body::before {
@@ -351,7 +353,7 @@ body.authed .nav-noauth { display: none; }
     display: flex;
     gap: 0;
     align-items: flex-start;
-    background: var(--bg);
+    background: transparent;
     border-top: 2px solid var(--accent);
     border-left: 1px solid var(--bevel-hi);
     border-right: 1px solid var(--bevel-hi);
@@ -369,7 +371,7 @@ body.authed .nav-noauth { display: none; }
     top: 108px;
     max-height: calc(100vh - 116px);
     overflow-y: auto;
-    background: var(--bg);
+    background: transparent;
     border-right: 1px solid var(--bevel-lo);
     padding: 0.4rem;
 }
@@ -495,7 +497,7 @@ main {
     min-width: 0;
     min-height: 400px;
     padding: 0.55rem;
-    background: var(--bg);
+    background: transparent;
 }
 
 .page-shell { width: 100%; }
