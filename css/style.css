@@ -1888,3 +1888,195 @@ a:focus {
     background: var(--bg-2);
     color: var(--text);
 }
+/* =========================================
+   OVERHAUL: Retro Terminal / 00s Core
+   ========================================= */
+
+:root {
+    --bg: #050505;
+    --bg-2: #111111;
+    --bg-3: #1a1a1a;
+    --text: #00ff41; /* Classic Matrix/Terminal Green */
+    --accent: #00ff41;
+    --accent-dim: #003b11;
+    --link: #00ff41;
+    --border: #333;
+    --window-top: #222;
+    --window-text: #aaa;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', Courier, monospace; /* More generic terminal font */
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+}
+
+/* CRT Scanline Effect Enhancement */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(18, 16, 16, 0.1);
+    opacity: 0;
+    z-index: 10000;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.27861; }
+  5% { opacity: 0.34769; }
+  10% { opacity: 0.23604; }
+  15% { opacity: 0.90626; }
+  20% { opacity: 0.18128; }
+  25% { opacity: 0.83891; }
+  30% { opacity: 0.65583; }
+  35% { opacity: 0.57807; }
+  40% { opacity: 0.26559; }
+  45% { opacity: 0.84693; }
+  50% { opacity: 0.96019; }
+  55% { opacity: 0.08523; }
+  60% { opacity: 0.71313; }
+  65% { opacity: 0.09044; }
+  70% { opacity: 0.27035; }
+  75% { opacity: 0.0296; }
+  80% { opacity: 0.01205; }
+  85% { opacity: 0.19077; }
+  90% { opacity: 0.46142; }
+  95% { opacity: 0.04321; }
+  100% { opacity: 0.54563; }
+}
+
+/* Flexbox Layout Adjustments */
+.layout-container {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 10px;
+    margin-top: 130px; /* Adjust for fixed header */
+}
+
+/* Sidebar as 'Terminal Panels' */
+.sidebar {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Widget Overhaul - Windows 2000 / XP Style Panels */
+.widget {
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    box-shadow: 2px 2px 0px #000;
+}
+
+.widget-header {
+    background: var(--window-top);
+    color: var(--window-text);
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.widget-header::after {
+    content: ' [X]';
+    float: right;
+    color: var(--text);
+}
+
+.widget-content {
+    background: var(--bg);
+    border: none;
+    margin: 0;
+    padding: 10px;
+}
+
+/* Link Item - List / Card Hybrid */
+.link-item {
+    border: 1px solid var(--accent-dim);
+    background: rgba(0, 255, 65, 0.02);
+    margin-bottom: 10px;
+    padding: 15px;
+    transition: all 0.2s ease;
+}
+
+.link-item:hover {
+    background: rgba(0, 255, 65, 0.05);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+}
+
+.link-header h3 a {
+    color: var(--text) !important;
+    text-decoration: underline;
+    font-size: 1.1rem;
+}
+
+.link-header h3 a:hover {
+    background: var(--text);
+    color: #000 !important;
+}
+
+/* Toolbar - Terminal Breadcrumbs */
+.main-toolbar {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 5px;
+    font-family: monospace;
+}
+
+.main-toolbar-path::before {
+    content: "guest@portal:~";
+    color: var(--text);
+    margin-right: 5px;
+}
+
+/* Nav - Retro Tabs */
+nav {
+    background: #111;
+    border: 1px solid #333;
+    padding: 5px;
+    border-radius: 4px 4px 0 0;
+}
+
+nav a {
+    border: 1px solid transparent;
+    margin: 0 2px;
+}
+
+nav a.active {
+    background: #222;
+    border: 1px solid #444;
+    border-bottom-color: #222;
+    color: var(--text) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #000;
+}
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border: 1px solid #555;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
